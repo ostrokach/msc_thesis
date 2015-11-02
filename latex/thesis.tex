@@ -13,37 +13,11 @@
 
 \setlength{\parskip}{3mm plus4mm minus3mm}
 
-
-
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% This part sets the section header to whatever is specified 
-% inside the curly brackets.
-%\makeatletter
-%\def\@seccntformat#1{%
-%  \expandafter\ifx\csname c@#1\endcsname\c@section\else
-%  \csname the#1\endcsname\quad
-%  \fi}
-%\makeatother
-
-% This part sets the subsection header to a), b), c), etc...
-%\renewcommand{\thesubsection}{\alph{subsection})}
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
-
-
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% Zotero Better Bib(la)Tex
-% https://github.com/ZotPlus/zotero-better-bibtex
-
-
-%\documentclass[oneside]{scrbook} 
-%\usepackage[none]{hyphenat}%
-
-%=====================Language, Fonts============================  
+% Language, Fonts
 \selectlanguage{english}
 \usepackage{courier,amsmath,amsfonts} %fonts
 
-%=====================Referencing============================
+% Referencing
 \usepackage{xcolor} %
 \usepackage{hyperref} %
 \definecolor{dark-red}{rgb}{0.4,0.15,0.15}
@@ -53,6 +27,8 @@
     colorlinks, linkcolor={dark-red},
     citecolor={dark-blue}, urlcolor={medium-blue} %url can be magenta 
     }
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 \usepackage[backend=biber,style=chem-acs,terseinits=true,sorting=none,isbn=false,doi=false]{biblatex}
 
@@ -68,8 +44,6 @@
 %\addbibresource{http://localhost:23119/better-bibtex/collection?/0/RSRPJ2GB.biblatex}
 
 
-% extension must be written
-
 %\addbibresource{C:/Users/Dropbox/phd/ref/Exported Items.bib} % don't forget to writhe the path and extension of .bib file
 \ExecuteBibliographyOptions{%
   citetracker=true,% Citation tracker enabled in order not to repeat citations, and have two lists.
@@ -78,7 +52,7 @@
   dateabbrev=false,% Remove abbreviations in dates, for same reason as ``alldates=long''
   articletitle=true,% To have article titles in full bibliography
   maxcitenames=999% Number of names before replacing with et al. Here, everyone.
-  }
+}
 
 
 % No brackets around the number of each bibliography entry
@@ -141,9 +115,8 @@
   \ifentrytype{article}% Delimit article and journal titles with a period
     {\adddot}
     {}}
+    
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
-
 
 
 \title{MSc Research Paper \vspace{0.2cm} \\ Predicting the thermodynamic effect of mutations on a genome-wide scale
@@ -162,6 +135,32 @@
 \section*{Abstract}
 
 $$\text{Claim:} \quad\quad \forall n \in \mathbb{N}, P(n) \implies Q(n)$$
+
+
+
+\section{Introduction}
+
+
+
+
+\section{Methods}
+
+
+
+
+\section{Results}
+
+
+
+
+\section{Discussion}
+
+
+
+
+\section{Future Directions}
+
+
 
 
 \section{Energetic features}

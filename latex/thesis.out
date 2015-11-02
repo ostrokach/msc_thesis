@@ -1,15 +1,20 @@
-\BOOKMARK [1][-]{section.1}{Energetic features}{}% 1
-\BOOKMARK [1][-]{section.2}{Sequence features}{}% 2
-\BOOKMARK [1][-]{section.3}{Co-evolution between amino acids}{}% 3
-\BOOKMARK [1][-]{section.4}{Co-evolution between amino acids}{}% 4
-\BOOKMARK [1][-]{section.5}{Introduction}{}% 5
-\BOOKMARK [2][-]{subsection.5.1}{Background on clinical decision support systems}{section.5}% 6
-\BOOKMARK [1][-]{section.6}{Methods}{}% 7
-\BOOKMARK [2][-]{subsection.6.1}{Building the gene-disease ontology network}{section.6}% 8
-\BOOKMARK [3][-]{subsubsection.6.1.1}{Parsing gene-disease association data}{subsection.6.1}% 9
-\BOOKMARK [3][-]{subsubsection.6.1.2}{Parsing disease prevalence data}{subsection.6.1}% 10
-\BOOKMARK [1][-]{section.7}{Results}{}% 11
-\BOOKMARK [2][-]{subsection.7.1}{Performing inference}{section.7}% 12
-\BOOKMARK [3][-]{subsubsection.7.1.1}{Learning network structure and parameters}{subsection.7.1}% 13
-\BOOKMARK [2][-]{subsection.7.2}{The utility of probabilities}{section.7}% 14
-\BOOKMARK [1][-]{section.8}{Discussion}{}% 15
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Methods}{}% 2
+\BOOKMARK [1][-]{section.3}{Results}{}% 3
+\BOOKMARK [1][-]{section.4}{Discussion}{}% 4
+\BOOKMARK [1][-]{section.5}{Future Directions}{}% 5
+\BOOKMARK [1][-]{section.6}{Energetic features}{}% 6
+\BOOKMARK [1][-]{section.7}{Sequence features}{}% 7
+\BOOKMARK [1][-]{section.8}{Co-evolution between amino acids}{}% 8
+\BOOKMARK [1][-]{section.9}{Co-evolution between amino acids}{}% 9
+\BOOKMARK [1][-]{section.10}{Introduction}{}% 10
+\BOOKMARK [2][-]{subsection.10.1}{Background on clinical decision support systems}{section.10}% 11
+\BOOKMARK [1][-]{section.11}{Methods}{}% 12
+\BOOKMARK [2][-]{subsection.11.1}{Building the gene-disease ontology network}{section.11}% 13
+\BOOKMARK [3][-]{subsubsection.11.1.1}{Parsing gene-disease association data}{subsection.11.1}% 14
+\BOOKMARK [3][-]{subsubsection.11.1.2}{Parsing disease prevalence data}{subsection.11.1}% 15
+\BOOKMARK [1][-]{section.12}{Results}{}% 16
+\BOOKMARK [2][-]{subsection.12.1}{Performing inference}{section.12}% 17
+\BOOKMARK [3][-]{subsubsection.12.1.1}{Learning network structure and parameters}{subsection.12.1}% 18
+\BOOKMARK [2][-]{subsection.12.2}{The utility of probabilities}{section.12}% 19
+\BOOKMARK [1][-]{section.13}{Discussion}{}% 20
