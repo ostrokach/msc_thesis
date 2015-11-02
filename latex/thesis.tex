@@ -1,0 +1,432 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.8in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[document]{ragged2e}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{pbox}
+\usepackage{setspace}
+\usepackage{listings}
+
+\setlength{\parskip}{3mm plus4mm minus3mm}
+
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% This part sets the section header to whatever is specified 
+% inside the curly brackets.
+%\makeatletter
+%\def\@seccntformat#1{%
+%  \expandafter\ifx\csname c@#1\endcsname\c@section\else
+%  \csname the#1\endcsname\quad
+%  \fi}
+%\makeatother
+
+% This part sets the subsection header to a), b), c), etc...
+%\renewcommand{\thesubsection}{\alph{subsection})}
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% Zotero Better Bib(la)Tex
+% https://github.com/ZotPlus/zotero-better-bibtex
+
+
+%\documentclass[oneside]{scrbook} 
+%\usepackage[none]{hyphenat}%
+
+%=====================Language, Fonts============================  
+\selectlanguage{english}
+\usepackage{courier,amsmath,amsfonts} %fonts
+
+%=====================Referencing============================
+\usepackage{xcolor} %
+\usepackage{hyperref} %
+\definecolor{dark-red}{rgb}{0.4,0.15,0.15}
+\definecolor{dark-blue}{rgb}{0.15,0.15,0.4}
+\definecolor{medium-blue}{rgb}{0,0,0.5}
+\hypersetup{
+    colorlinks, linkcolor={dark-red},
+    citecolor={dark-blue}, urlcolor={medium-blue} %url can be magenta 
+    }
+
+\usepackage[backend=biber,style=chem-acs,terseinits=true,sorting=none,isbn=false,doi=false]{biblatex}
+
+% /Bioinformatics/Mutation scoring/
+\addbibresource{http://localhost:23119/better-bibtex/collection?/0/RSRPJ2GB.biblatex}
+% /Computer science
+% \addbibresource{http://localhost:23119/better-bibtex/collection?/0/BHZ3WCDB.biblatex} 
+% /Databases
+%\addbibresource{http://localhost:23119/better-bibtex/collection?/0/HB6PP66S.biblatex}
+% /Disease
+%\addbibresource{http://localhost:23119/better-bibtex/collection?/0/2JWAVBHR.biblatex}
+% /Mutation scoring
+%\addbibresource{http://localhost:23119/better-bibtex/collection?/0/RSRPJ2GB.biblatex}
+
+
+% extension must be written
+
+%\addbibresource{C:/Users/Dropbox/phd/ref/Exported Items.bib} % don't forget to writhe the path and extension of .bib file
+\ExecuteBibliographyOptions{%
+  citetracker=true,% Citation tracker enabled in order not to repeat citations, and have two lists.
+  sorting=none,% Don't sort, just print in the order of citation
+  alldates=long,% Long dates, so we can tweak them at will afterwards
+  dateabbrev=false,% Remove abbreviations in dates, for same reason as ``alldates=long''
+  articletitle=true,% To have article titles in full bibliography
+  maxcitenames=999% Number of names before replacing with et al. Here, everyone.
+  }
+
+
+% No brackets around the number of each bibliography entry
+\DeclareFieldFormat{labelnumberwidth}{#1\addperiod}
+
+% Suppress article title, doi, url, etc. in citations
+\AtEveryCitekey{%
+  \ifentrytype{article}
+    {\clearfield{title}}
+    {}%
+  \clearfield{doi}%
+  \clearfield{url}%
+  \clearlist{publisher}%
+  \clearlist{location}%
+  \clearfield{note}%
+}
+
+% Print year instead of date, when available; make use of urldate
+\DeclareFieldFormat{urldate}{\bibstring{urlseen}\space#1}
+\renewbibmacro*{date}{% Based on date bib macro from chem-acs.bbx
+  \iffieldundef{year}
+    {\ifentrytype{online}
+       {\printtext[urldate]{\printurldate}}
+       {\printtext[date]{\printdate}}}
+    {\printfield[date]{year}}}
+
+% Remove period from titles
+\DeclareFieldFormat*{title}{#1}
+% Make year bold for @book types
+\DeclareFieldFormat[book]{date}{\textbf{#1}} % doctorate added this line
+% Embed doi and url in titles, when available
+\renewbibmacro*{title}{% Based on title bib macro from biblatex.def
+  \ifboolexpr{ test {\iffieldundef{title}}
+               and test {\iffieldundef{subtitle}} }
+    {}
+    {\ifboolexpr{ test {\ifhyperref}
+                  and not test {\iffieldundef{doi}} }
+       {\href{http://dx.doi.org/\thefield{doi}}
+          {\printtext[title]{%
+             \printfield[titlecase]{title}%
+             \setunit{\subtitlepunct}%
+             \printfield[titlecase]{subtitle}}}}
+       {\ifboolexpr{ test {\ifhyperref}
+                     and not test {\iffieldundef{url}} }
+         {\href{\thefield{url}}
+            {\printtext[title]{%
+               \printfield[titlecase]{title}%
+               \setunit{\subtitlepunct}%
+               \printfield[titlecase]{subtitle}}}}
+         {\printtext[title]{%
+            \printfield[titlecase]{title}%
+            \setunit{\subtitlepunct}%
+            \printfield[titlecase]{subtitle}}}}%
+     \newunit}%
+  \printfield{titleaddon}%
+  \clearfield{doi}%
+  \clearfield{url}%
+  \clearlist{language}% doctorate added this
+  \clearfield{note}% doctorate added this
+  \ifentrytype{article}% Delimit article and journal titles with a period
+    {\adddot}
+    {}}
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+
+
+\title{MSc Research Paper \vspace{0.2cm} \\ Predicting the thermodynamic effect of mutations on a genome-wide scale
+\vspace{0.2cm}}
+\author{Alexey Strokach}
+\date{December 22, 2014}
+
+
+\begin{document}
+
+\maketitle
+
+\onehalfspacing
+
+
+\section*{Abstract}
+
+$$\text{Claim:} \quad\quad \forall n \in \mathbb{N}, P(n) \implies Q(n)$$
+
+
+\section{Energetic features}
+
+
+The computational methods for predicting protein stability upon mutation have been compared recently \cite{Potapov2009}.
+
+Maximum correlation coefficient 0.86 \cite{Potapov2009}.
+
+I-Mutant 2 and FoldX are trained
+
+Rosetta can predict ddG as well, but the energy function has to be chosen carefully \cite{Kellogg2011}. In particular, a soft repulsion energy function should be used for repacking (combinatorial rotamer optimization carried out using Monte Carlo simulated annealing with Dunbrack backbone dependent rotamer library), optionally combined with a hard-repulsion energy function used during backbone and sidechain minimization with uniform constraints \cite{Kellogg2011}. However, optimization leads to only slightly improved accuracy for a single mutation (0.68 vs 0.69 correlation coefficient), and can be skipped in order to speed up predictions. 
+
+When the reference energies for the 20 amino acids are fit to produce the best ddG correlation with experimental values, the correlation coefficient went up to 0.73. 
+The source code for FoldX is not availible. FoldX is trained on the Protherm and Skempi datasets, and therefore our cross-validation is likely overfitting the 
+
+
+
+\section{Sequence features}
+
+Untrained:
+
+SIFT
+Provean 
+MutationAssessor
+FATHMM (unweighted)
+
+
+Trained:
+Polyphen-2
+MutationTaster
+FATHMM (weighted)
+
+
+
+\section{Co-evolution between amino acids}
+
+
+OMA
+
+eggNOG
+
+
+
+
+
+\section{Co-evolution between amino acids}
+
+Using a balanced set of 6,630 mutations, the structure-based method results in about 3\% higher accuracy and AUC and 0.06 higher correlation with respect to the sequence-based approach \cite{Capriotti2011}.
+
+"Improving the prediction of disease-related variants using protein three-dimensional structure"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section*{Overview}
+
+The goal of this project was to implement a Bayesian network, which would link proteins in a protein association network with diseases in a disease ontology, and would permit the inference of diseases caused by the disruption of a given set of proteins, and inference of proteins whose disruption is likely to cause a given set of diseases. Such a Bayesian network could be used as a component of a larger clinical decision support (CDS) system, and could improve the accuracy of such a system by incorporating prior information based on the genomic sequence of the person being diagnosed. A general overview of the conceived CDS system, as well as the subcomponent of the system that is the focus of this project, is presented in Figure \ref{fig:gene-disease-phenotype}. 
+
+In brief, we construct a directed acyclic graph (DAG) that is based on the disease ontology, but also includes arcs from proteins to diseases, depicting known protein-disease associations. We convert this graph into a Bayesian network, by treating each non-terminal node as a noisy-OR gate, and by assigning to each disease a prevalence value that we obtain from electronic health record (EHR) and medical claims data. We compare the performance of different inference algorithms in this network, and describe a utility function that we could use to convert disease probabilities to diagnoses. 
+
+This report is divided into four sections. In the Introduction, we give a brief overview of CDS systems, focusing on the different methods that were used previously by other groups, and the corresponding benefits and shortcomings of those methods. We also describe in more depth the network that we construct in this project, and offer some justification and historic background for our choice of the network structure. In the Methods section, we describe how we constructed this network, listing our assumptions, our sources of data, and the problems that we encountered. In the Results section, we report the outcome of using different inference algorithms. In the Discussion section, we summarise what we have learned, list some topics that would be worth investigating in the future, and some ways in which we could make the network that we created better. 
+
+
+\begin{figure} % [htbp]  % H
+\centering
+% \includegraphics[scale=0.305]{figures/gene-disease-phenotype_crop_rectangle.pdf}
+\caption{
+A schematic giving the overview of this project. \textbf{Left:} protein functional association network, formulated as a Merkov random field. Proteins connected by edges are predicted to have the same effect on the organism if either of the proteins is mutated. Proteins coloured a darker green are known to be involved in specific genetic diseases, and act as relays that convert genetic information into disease priors. \textbf{Centre:} the human disease ontology, formulated as a Bayesian network. The node at the top indicates the presence or absence of a given disease, and that node's parents provide an increasingly more specific diagnosis of the disease. \textbf{Right:} the human phenotype ontology, formulated as a Bayesian network. The node at the top corresponds to the presence or absence of a given phenotype (which could be any clinical finding), and that node's parents provide an increasingly specific description of that phenotype. Green dashed arrows link proteins in the protein network to diseases that those proteins may cause. Dashed blue arrows link diseases in the disease ontology to phenotypes that those diseases may cause. The shaded rectangle indicates the component of this gene-disease-phenotype network that we analysed in this project, and that we refer to as the gene-disease ontology (gene-DO) network.
+}
+\label{fig:gene-disease-phenotype}
+\end{figure}
+
+
+
+
+
+\section{Introduction} \label{introduction}
+
+\subsection{Background on clinical decision support systems}
+
+Clinical decision support systems (CDS) are designed to aid the physician in making the correct diagnosis and prescribing the correct treatment for a given patient. CDS systems usually take as input the patient's history, physical examination results, laboratory test results, and other phenotypes, and provide as output a list of the most probable diagnoses \cite{Moore2011}. 
+
+Some of the first advanced CDS systems were INTERNIST-1/Quick Medial Reference (QMR) \cite{Myers1987} (here referred to as QMR for brevity), and MYSIN \cite{Buchanan1984}, developed in the 1970s and 1980s by groups at the University of Pittsburgh and Stanford. Both systems were supported by domain expert knowledge, and used a rule-based strategy, modelled after the decision-making process of a physician, to make the diagnosis. The MYSIN system integrated expert knowledge into the diagnostic algorithms, which made the system difficult to maintain and update \cite{Moore2011}. The QMR system, on the other hand, kept the knowledge-base decoupled from the decision algorithms, giving them more leeway to evolve independently.
+
+Compiling the QMR knowledge-base (QMR-KB) took a large amount of effort, with over 20 man-years invested by the core domain export, and many contributions from students and collaborators. The goal was to create a complete ``evidence-based, academic repository of diagnostic information", and by 1990 the QMR-KB consisted of over 600 diseases and 4000 findings, with on average of 85 findings and 8-10 linked diagnoses per disease \cite{Miller2010}. 
+
+The first diagnostic algorithms used by QMR linked every disease to every possible symptom, and this caused ``program execution times [to grow] exponentially in the number of findings" \cite{Miller2010} (a recurring topic in CSC2534). However, this rule-based algorithm had the advantage of listing the set of rules that led the algorithm to the particular diagnosis, which allowed the physician to accept or discredit the diagnosis based on his/her perceived credibility of the rules. 
+
+In the 1990s, Shwe \textit{et.al.} reformulated the QMR diagnostic task as an inference problem in a probabilistic graphical network (QMR-DT) \cite{Shwe1991,Middleton1991}. Information extracted from the QMR-KB was used to construct a bipartite directed acyclic graph (DAG), which linked 534 diseases to 4,040 clinical findings using 40,740 arcs. The effect of multiple diseases on a single finding was modelled using noisy-OR gates, under the assumption that the effect of each disease is independent from the effects of all the other diseases. Equation \ref{eq:noisy_or} gives the probability of having a finding $f$, given a set of $k$ disease parents $\{d_1...d_k\}$, that each cause the finding with a probability of $P(f=1|d_i)$, computed using the noisy-OR assumption. The primary advantage of using noisy-OR gates is that they allow the construction of conditional probability tables (CPTs) from $k$ rather than $2^k$ conditional probabilities. 
+
+\begin{equation} \label{eq:noisy_or}
+P(f = 1 | \{d_1...d_k\}) = 1 - \prod_{i=1}^{k} (1 - P(f = 1 | d_{i})
+\end{equation}
+
+Shwe \textit{et.al.} report that exact inference in the QMR-DT network was intractable when the network was queried with more than a handful of clinical findings. However, the authors were able to use heuristic and simulation algorithms to perform approximate inference and to estimate QMR-DR prediction accuracy. Subsequent advances in variational inference techniques allowed for quicker and more accurate inference in the QMR-DT network \cite{Heckerman1989,Jaakkola1999,Ng1999,Kappen2001,Heskes2002}. 
+
+There have been few advances in CDS systems since QMR-DT. Shwe \textit{et.al.} mention that they plan to extend QMR-DT by adding utility and decision nodes, converting the Bayesian network into an influence diagram \cite{Shwe1991}. However, to our knowledge, that proposal had not been materialized. Promedas \cite{Wemmenhove2007}, one of the CDS systems that is currently on the market, uses the same probabilistic graphical model as QMR-DT, with the addition of a ``risk factor'' layer, which modifies the likelihood of different diseases based on risk factors. Inference in the Promedas network is performed using the junction tree algorithm and loop-corrected belief propagation, and there are cases for which it is reported to be intractable \cite{Wemmenhove2007}.
+
+
+
+
+
+\section{Methods}
+
+
+\subsection{Building the gene-disease ontology network}
+
+The disease component of the gene-disease ontology (gene-DO) network was constructed by downloading and parsing the disease ontology (DO) .obo file, which produced a directed acyclic graph (DAG) with 6456 diseases and 6815 disease-disease arcs. We added to the graph 795 gene-disease associations that we extracted from DisGeNet \cite{Bauer-Mehren2010} and HPO \cite{Kohler2013}, and 2821 disease prevalence priors that we extracted from HuDiNe \cite{Hidalgo2009} and Stride \cite{Finlayson2014}, as described below. The overlap between all diseases in DO, diseases with gene-disease associations, and diseases with prevalence priors, is shown as a Venn diagram in Figure \ref{fig:venn_diagrams}A.
+
+After adding the gene-disease arcs and disease prevalence priors to DO, we iteratively removed all leaves in the ontology for which we had no prior information (\textit{i.e.} we removed all diseases that had no gene-disease links and no disease priors for it or its parents), leaving us with a network that contained 3660 diseases (Figure \ref{fig:venn_diagrams}B). Each disease that was not a leaf in the resulting network was given a conditional probability table (CPT) that assigned to it a probability of 0\% if none of its parents were true, and a probability of 100\% if any of its parents were true. This CPT is correct for diseases that only have other diseases as parents, as it correctly describes the structure of an ontology, but it is an oversimplification for diseases that also have proteins as parents, as it assumes that the disruption of those proteins will always cause the disease. We accept this oversimplification for this project, but note that in a production system we would have to construct more meaningful CPTs using actual mutation penetrance data.
+
+In order to keep the sizes of the CPT tables reasonable, we limited the maximum number of parents that a node could have to 10. For nodes that had more than 10 parents, we introduced dummy nodes that would each integrate the signal from a subset of the parents, using the noisy-OR formulation and the same probabilities as the original node. The original node would then combine the signal from a much smaller number of dummy nodes.
+
+For diseases that were the leaf nodes of the constructed network, we used probabilities that we obtained from the HuDiNe and Stride databasets. For proteins, we used a simple ``placeholder" probability of $0.00053$, which we obtained by dividing a probability of $1.0$ by the number of proteins in the network. Ultimately, we would like to obtain a personalised probability that the function of a given protein is disrupted by analysing each individual's genome sequencing data and extrapolating the results to proteins that are known to be involved in disease (left panel of Figure \ref{fig:gene-disease-phenotype}).
+
+A considerable simplification that we made while creating the network was to assume that the probability of each non-terminal node is determined by its parents (\textit{i.e.} that a disease is only be present if any of its parent disease are present or any of its parent proteins are mutated). In many cases, a patient may be diagnosed with a disease that is not a leaf in the disease ontology, and the prevalence of those diseases would be underestimated by the current assumption. To address this issue, we could either distribute the ``surplus probability'' of the disease equally among its parents, or create a new ``leaky node'' parent that gives the disease a certain probability of being true even when all of its parents are false. We will likely use the latter approach in our future work.
+
+The network was constructed, as described above, using the python programming language. It was exported using the Hugin .net file format, which is supported by many software packages designed for working with PGMs: Hugin, Genie, SamIam, UnBBayes, gRain, and others.
+
+
+\begin{figure} % [htbp]  % H
+\centering
+% \includegraphics[scale=0.4]{figures/venn_plots_DO.pdf}
+\caption{Venn diagrams showing the fraction of diseases in the disease ontology (blue) that were covered by gene-disease association (cyan) and gene prevalence (magenta) data. A shows all diseases in the disease ontology. B shows the diseases in the disease ontology that remained after the ontology was pruned to remove leaves (diseases) with no prior information.}
+\label{fig:venn_diagrams}
+\end{figure}
+
+
+
+\subsubsection{Parsing gene-disease association data}
+
+DisGeNet \cite{Bauer-Mehren2010} is a comprehensive database of gene-disease associations. It integrates gene-disease associations curated by experts, with gene-disease associations inferred by homology and by text-mining the scientific literature. All gene-disease associations are assigned a confidence score, which describes the strength of the supporting evidence, and one of three association types, which describes the role that the given gene plays in the disorder. We considered only the  \textit{GeneticVariation} association type (DisGeNet-gv), as this was deemed to be the only type relevant when using genetic variants to predict disease.
+
+The human phenotype ontology (HPO) ``aims to provide a standardized vocabulary of phenotypic abnormalities encountered in human disease" \cite{Kohler2013}. The HPO developers made available an extensive list of gene-disease-phenotype associations, which they created by processing and extending the information in OMIM \cite{Hamosh2005} and Orphanet \cite{Rath2012}. We used the gene-disease subset of this file, here referred to as HPO-D, as another source of curated, high-confidence gene-disease associations.
+
+While DO uses it's own disease identifier system, it provides cross-references to the identifiers used by OMIM, Orphanet, international classification of disease 9 (ICD-9), and NIH Unified Medical Language System (CUI). We used those cross-references to map to DO the CUI identifiers adapted by Disgenet and the OMIM and Orphanet identifiers adapted by HPO. Table \ref{tab:gene2disease} shows the surprisingly low success rate the we achieved when mapping those disease identifiers. The HPO-D dataset was actually introduced at a later stage of this project, in order augment the small number of gene-disease associations that we extracted from DisGeNet, and to see if the low mapping rate is specific to the CUI identifiers used by Disgenet. While including HPO did introduced a substantial number of new gene-disease associations (Table \ref{tab:gene2disease}), the mapping success rate for HPO was not distinctly higher (10\% vs. 16\%).
+
+
+\begin{table} % [htbp] % H
+\caption{The fraction of diseases present in the DisGeNet-gv and HPO-D gene-disease association datasets that could be mapped to the disease ontology.}
+\label{tab:gene2disease}
+\centering
+\begin{tabular}{l|llll} \toprule
+&  DisGeNet-gv & HPO-D & Total & Overlap \\ \midrule
+Number of unique genes & 1,839 & 3,158 & & \\
+Number of unique diseases & 2,376 & 4,919 & & \\
+Number of unique gene-disease pairs & 2,622 & 6,481 & & \\
+\pbox{20cm}{Number (and \%) of diseases that were mapped\\
+to the disease ontology} 
+& 233 (10\%) & 782 (16\%) & 795 & 220 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+\subsubsection{Parsing disease prevalence data}
+
+The human disease network (HuDiNe) \cite{Hidalgo2009} contains disease occurrence and co-occurrence data extracted from Medicare inpatient claims of 32 million Americans aged 65 or older over a 3-year period. The Stanford center for clinical informatics (Stride) \cite{Finlayson2014} dataset contains clinical concept occurrence and co-occurrence frequencies extracted from electronic health records (EHR) of 1.2 million Americans over a 19-year period. We mapped the ICD-9 disease ids used by HuDiNe, and the CUI ids used by Stride, to the unique disease ids used by DO using DO cross-references, and we combined the two disease prevalence datasets to obtain disease prevalence priors for 2821 diseases (Table \ref{tab:emr2disease}).  The fraction of disease identifiers that could be mapped to the DO was low, and was similar to the fraction of disease identifiers that could be mapped in the gene-disease datasets (Table \ref{tab:gene2disease}). 
+
+In a production environment, we would group disease prevalence data by sex, age, ethnicity and possibly other variables describing each individual, and we would create different disease priors for different population demographics. However, in order to keep things simple for this project and maximize the coverage of diseases in the DO, we simply combined the disease prevalence data from the two sources, taking the average disease prevalence when the same disease was annotated by both the HuDiNe and the Stride dataset.
+
+
+\begin{table} % [htbp] % H
+\caption{The fraction of diseases present in the HuDiNe and Stride disease prevalence datasets that could be mapped to the disease ontology.}
+\label{tab:emr2disease}
+\centering
+\begin{tabular}{l|llll} \toprule
+& Stride & HuDiNe & Total & Overlap \\ \midrule
+Number of patients & 1.2 million & 13 million & & \\
+Number of unique diseases (‘concepts’) & 18,787 & 15,983 & & \\
+\pbox{20cm}{Number (and \%) of diseases that were mapped\\
+to the disease ontology}
+& 1635 (8.7\%) & 1888 (11.8\%) & 2821 & 702 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+
+
+\section{Results}
+
+
+\subsection{Performing inference}
+
+Our first step in analysing the gene-DO network was to see if we can perform inference successfully using one of the three commonly-used software packages for PGMs: the gRain \cite{Hojsgaard2012} and bnlearn \cite{Scutari2010} plugins for R, SamIam \cite{Gaag2007}, and UnBBayes \cite{Matsumoto}.
+
+The most popular exact inference algorithm is the junction tree algorithm, which is a variant of the variable elimination algorithm that uses junction trees in order to speed up the execution of repeated queries \cite{Darwiche2009}. The junction tree algorithm is implemented in all three packages, and in all three packages attempting to use it to perform inference in the gene-DO network failed some form of the ``out of memory'' error, even when using a cluster with 250 GB of RAM. The gRain package gave the most informative error:
+
+\begin{verbatim}
+> querygrain(gene_do_net, nodes=c("d4"), type="marginal")
+Error: cannot allocate vector of size 4096.0 Gb
+\end{verbatim}
+
+Thus, it appears that the junction tree algorithm requires too much memory to work with the gene-DO network on most current systems. 
+
+
+Next we tried the recursive conditioning algorithm, implemented in SamIam. Recursive conditioning is an ``anyspace'' algorithm that can perform exact inference on a Bayesian network using any amount of memory, taking longer to perform inference the less memory is specified \cite{Darwiche2009}. Despite the claim to be ``anyspace'', the recursive conditioning algorithm in SamIam failed to work with our network, giving ``overflow'' errors even when it was instructed to use the least amount of memory possible.
+
+Given our lack of success with exact inference algorithms, we tried to use some of the approximate learning algorithms, hoping to achieve more promising results. The bnlearn package can calculate the conditional probability of an event given evidence, and the conditional probability tables of a set of nodes given evidence, using either logic sampling or likelihood weighting sampling. However, it repeats the sampling for every query, which makes it inefficient and time-consuming when performing a large number of queries. 
+
+UnBBayes implements Gibbs sampling in addition to logic sampling and likelihood weighting sampling, and allows the user to save the output of the sampling algorithms to a text file. Logic sampling and likelihood sampling algorithms produced over 100,000 samples in several hours, but given the low probability of many of the proteins and diseases in our network, many more samples would likely be required to accurately estimate conditional probabilities. The Gibbs sampling algorithm produced less than 10,000 samples in the same amount of time. 
+
+SamIam was the only package that implemented loopy belief propagation and edge deletion belief propagation algorithms. The loopy belief propagation algorithm was able to calculate the marginal probability of each node in the network in several seconds, and was able to calculate conditional probabilities given evidence in under a few minutes for many of the queries that we tried. However, in some cases, it failed to converge. Edge deletion belief propagation took substantially more time; calculating the marginal probabilities in a network without any evidence took several minutes with an edge recovery rate of 40 out of 1011.
+
+Overall, loopy belief propagation is the most tractable algorithm for the gene-DO network, out of the algorithms that we tried. Variational inference methods \cite{Jaakkola1999,Ng1999} possibly could have led to better performance, but we could not find a package that could run variational inference on our network (and did not have time to implement one on our own).
+
+
+
+
+
+\subsubsection{Learning network structure and parameters}
+
+We explored the possibility of refining the structure and parameters of our network using electronic medical record data. The ideas of this was appealing because the complex patterns of disease co-occurrence likely carry information about unknown protein-disease associations (assuming that at least some disease co-occurrence is due to a common genetic cause). However, we discovered several difficulties that prevented us from following through with this goal:
+
+\begin{enumerate}
+\item  Due to privacy reasons, EMR data is easily accessible only in it's parsed form, as disease occurrence and disease co-occurrence frequencies. The frequency of co-occurrence for more than two diseases is lost, and we would have to reconstruct this information using some assumption. The simplest assumption would be say that the frequency with which two disease co-occur is never influenced by the existence of a third disease.
+
+\item While several methods have been described for performing parameter learning in Noisy-OR networks \cite{Halpern,Jernite2013}, those methods have not been implemented in an accessible package, and implementing a method ourselves would be time-consuming without necessarily being fruitful. 
+
+\item If we don't constrain the CPT tables using the noisy-OR assumption, we would be faced with a large number of parameters that would be difficult to learn and to interpret. Furthermore, we were not able to find a package that could refine a subset of arcs and CPTs in a Bayesian network using data with missing values.
+\end{enumerate}
+
+
+
+
+\subsection{The utility of probabilities}
+
+Due to time constraints, defining a utility function that would take as input a set of conditional probabilities, and would output a ranked list of diagnoses, was delegated to a later project. However, we can describe some qualities that such a utility function would possess:
+
+\begin{enumerate}
+\item  If a disease has the same probability of occurring as its parent, we would always rank the parent higher in the final list of diagnoses. (In practice, the probability of the parent would be increased by some tunable parameter $\epsilon$, in order to account for the fact that the probability of a child will always be higher than the probability of it's parent for any child that has more than one parent, as none of the nodes in our network have 0 probability).
+
+\item If a node has several parents that have the same probability, we would rank that node ahead of its parents. This is because selecting one of the parents would carry a high risk of selecting the wrong parent, and we are assuming that our agent is risk averse.
+\end{enumerate}
+
+
+
+
+\section{Discussion}
+
+Depend on closed-source FoldX. Can use openMM to recreate most of the features that are used by FoldX and train a final classifier using those features.
+
+Can use thermodynamic integration (TI) to increase the training set. Select a few mutations deemed to be the most important from each domain family. 
+
+
+
+
+\printbibliography[title={References}] % change from bibliography to references
+
+\end{document}
