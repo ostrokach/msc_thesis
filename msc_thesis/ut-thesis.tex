@@ -1,4 +1,4 @@
-%% ut-thesis.tex -- document template for graduate theses at UofT
+%% msc_thesis.tex -- document template for graduate theses at UofT
 %%
 %% Copyright (c) 1998-2013 Francois Pitt <fpitt@cs.utoronto.ca>
 %% last updated at 16:20 (EDT) on Wed 25 Sep 2013
@@ -90,7 +90,7 @@
 \department{Computer Science}
 \gradyear{2015}
 \author{Alexey Strokach}
-\title{Predicting the Effect of Mutations on a Genome-wide Scale}
+\title{Predicting the Effect of Mutations on a Genome-Wide Scale}
 
 %% *** NOTE ***
 %% Put here all other formatting commands that belong in the preamble.
@@ -109,6 +109,56 @@
 %% Make each page fill up the entire page.
 \flushbottom
 
+
+%%%%%%%%%%%%      CONFIGURE BIBLIOGRAPHY      %%%%%%%%%%%%
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\usepackage[
+    backend=biber,
+    style=numeric,
+    natbib=true,
+    maxnames=2,
+    sorting=nyt,
+    sortcites=false,
+    block=space,
+    date=long,
+    url=false, 
+    doi=false,
+    eprint=false,
+    isbn=false,
+    uniquename=false,
+    uniquelist=false,
+    terseinits=true,
+    firstinits=false
+]{biblatex}
+%\usepackage[backend=biber,terseinits=true,sorting=none,isbn=false,doi=false]{biblatex}
+\addbibresource{http://localhost:23119/better-bibtex/collection?/0/ZK67QXB9.biblatex}
+
+
+% /Bioinformatics/Mutation scoring/
+\addbibresource{http://localhost:23119/better-bibtex/collection?/0/RSRPJ2GB.biblatex}
+% /Computer science
+% \addbibresource{http://localhost:23119/better-bibtex/collection?/0/BHZ3WCDB.biblatex} 
+% /Databases
+%\addbibresource{http://localhost:23119/better-bibtex/collection?/0/HB6PP66S.biblatex}
+% /Disease
+%\addbibresource{http://localhost:23119/better-bibtex/collection?/0/2JWAVBHR.biblatex}
+% /Mutation scoring
+%\addbibresource{http://localhost:23119/better-bibtex/collection?/0/RSRPJ2GB.biblatex}
+
+
+%\addbibresource{C:/Users/Dropbox/phd/ref/Exported Items.bib} % don't forget to writhe the path and extension of .bib file
+\ExecuteBibliographyOptions{%
+  citetracker=true,% Citation tracker enabled in order not to repeat citations, and have two lists.
+  sorting=none,% Don't sort, just print in the order of citation
+  alldates=long,% Long dates, so we can tweak them at will afterwards
+  dateabbrev=false,% Remove abbreviations in dates, for same reason as ``alldates=long''
+ % articletitle=true,% To have article titles in full bibliography
+  maxcitenames=999% Number of names before replacing with et al. Here, everyone.
+}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 %%%%%%%%%%%%      MAIN  DOCUMENT      %%%%%%%%%%%%
 
@@ -190,15 +240,23 @@
 
 %% *** Include chapter files here. ***
 \include{introduction}
+\include{results}
+\include{discussion}
+\include{future_directions}
 
 %% This adds a line for the Bibliography in the Table of Contents.
 \addcontentsline{toc}{chapter}{Bibliography}
 %% *** Set the bibliography style. ***
 %% (change according to your preference/requirements)
-\bibliographystyle{plain}
+%\bibliographystyle{plain}
 %% *** Set the bibliography file. ***
 %% ("thesis.bib" by default; change as needed)
-\bibliography{thesis}
+%\bibliography{thesis}
+
+% AS References
+\printbibheading
+\printbibliography[title={Bibliography}]
+
 
 %% *** NOTE ***
 %% If you don't use bibliography files, comment out the previous line
