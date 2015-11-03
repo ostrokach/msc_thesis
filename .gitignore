@@ -1,0 +1,16 @@
+_*
+.*
+*.bak
+*.aux
+*.idx
+*.ilg
+*.ind
+*.toc
+*.bbl
+*.bcf
+*.blg
+*.out
+msc_thesis/*.log
+msc_thesis/*.gz
+msc_thesis/*.xml
+msc_thesis/*.pdf
