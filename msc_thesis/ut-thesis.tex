@@ -110,6 +110,25 @@
 \flushbottom
 
 
+
+%%%%%%%%%%%%      AS CUSTOM CONFIGURATIONS      %%%%%%%%%%%%
+
+% Source: 
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+
+% Source: http://tex.stackexchange.com/a/110854/66387
+\newcommand{\mychapter}[2]{
+	\setcounter{chapter}{#1}
+	\setcounter{section}{0}
+	\chapter*{#2}
+	\addcontentsline{toc}{chapter}{#1 #2}
+}       % before-code
+
+
+
+
+
 %%%%%%%%%%%%      CONFIGURE BIBLIOGRAPHY      %%%%%%%%%%%%
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -240,9 +259,9 @@
 
 %% *** Include chapter files here. ***
 \include{introduction}
-\include{results}
+\include{implementation}
+\include{applications}
 \include{discussion}
-\include{future_directions}
 
 %% This adds a line for the Bibliography in the Table of Contents.
 \addcontentsline{toc}{chapter}{Bibliography}
