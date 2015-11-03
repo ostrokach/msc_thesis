@@ -1,0 +1,6 @@
+Number of unique domain pairs: 27878
+Number of unique domain pairs / uniprots: 4597
+
+Number of interface mutations: 1,001,941
+Number finished: 702,294 (70%)
+
