@@ -4,7 +4,7 @@
 
 \subsection{Training}
 
-ELASPIC described in [] output xxx features in total. 
+ELASPIC described in  output xxx features in total. 
 1. We calculated those features for the Provean and the Skempi training sets. 
 2. We removed features that were note different in any of the training cases (xxx for core mutations and yyy for interface mutations).
 3. As described in [], balancing the training set can significantly improve performance. However, with Provean balancing the training set can bias the result because most mutations are to unconserved amino acids (often alanine) and 
@@ -80,7 +80,16 @@ Compare how well Provean, FoldX, and `ELASPIC with Provean' and `ELASPIC without
 
 
 
-\subsubsection{Deleterious vs. benign mutations}
+
+
+
+
+
+\section{Structure features}
+
+The performance of Provean is comparable to the leading mutation scoring programs, such as SITF, PolyPhen-2, Mutation Assessor, and CONDEL \cite{choi_predicting_2012}. Furthermore, Provean is distributed under a GPLv3 license, and uses \textit{supporting sets} of at most 45 sequences which can precalculated and stored. If a supporting set is available, calculating the Provean score takes several seconds per mutation.
+
+Another widely-used mutaiton scoring tool is PolyPhen-2. It is one of the packages predicted for 
 
 
 

@@ -1,0 +1,89 @@
+\chapter{Discussion}
+
+\section{Limitations}
+
+Cystic fibrosis
+
+  - Existing approaches remain limited in their ability to predict disease-causing variants. In a study of 1571 mutations of the CFTR gene causing cystic fibrosis, (SIFT, PolyPhen, PANTHER) \cite{dorfman_common_2010-1}
+
+
+Long QT syndrome
+
+  - Assessment of the predictive accuracy of five in silico prediction tools, alone or in combination, and two metaservers to classify long QT syndrome gene mutations.
+
+  - http://www.ncbi.nlm.nih.gov/pubmed/25967940
+  
+  
+
+\section{Extensions}
+
+- Predict homo-oligomers, since this is the predominant form of oligomerization in proteins.
+
+- Multiple amino acid substitutions + insertions / deletions
+
+- Alternative splicing / aberrant splicing
+
+
+
+\section{Applications}
+
+ - Predicting deleterious mutations
+ 
+ - Stabilizing proteins
+ 
+ - drugging protein-protein interfaces \cite{wells_reaching_2007}
+ 
+
+\section{Domain definitions}
+
+eSCOP
+
+Gene3D
+
+\section{Homology modelling}
+
+There are several approaches we could take to improve the quality of the homology models:
+
+\begin{itemize}
+\item Use sequence profiles (e.g. Pfam or Gene3D) to guide the alignment.  
+\item Use multiple templates when building the homology models.
+\item Create multiple models and choose the one with the highest DOPE score.
+\item Refine the model using molecular dynamics.
+\end{itemize}
+
+Long-term MD is not useful for optimizing structures in most cases \cite{raval_refinement_2012}.
+
+
+
+\section{Sequence features}
+
+Improvement to sequence features
+
+\begin{itemize}
+\item Use covariation between amino acids in addition tho the conservation score to predict the impact of mutations, as described by Kowarsch et. al. \cite{kowarsch_correlated_2010}.
+\end{itemize}
+
+
+
+\subsection{Protein-DNA/RNA interactions}
+
+ProNIT
+
+
+
+\subsection{Protein-ligand interactions}
+
+Platinum: Protein-ligand affinity change upon mutation database.
+
+  - http://bleoberis.bioc.cam.ac.uk/platinum/
+
+
+BioLiP is a semi-manually curated database for high-quality, biologically relevant ligand-protein binding interactions. 
+
+  - http://zhanglab.ccmb.med.umich.edu/BioLiP/
+
+  - The structure data are collected primarily from the Protein Data Bank, with biological insights mined from literature and other specific databases.
+
+\subsection{Predicting PPI}
+
+PRISM: Protein interaction by structure matching

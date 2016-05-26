@@ -1,0 +1,141 @@
+\mychapter{1}{Introduction}
+
+In this work we set out to examine how much sequence-based features can aid in the prediction of traditionally structural realms such as the prediction of $\Delta \Delta G$ scores of mutations, and how much structure-based features can aid with the prediction of mutation pathogenicity--a traditionally sequence based .
+
+
+Predicting the effect of mutations is important. 
+
+
+
+\section{Existing approaches for predicting the pathogenic effect of mutations}
+
+
+Sorting Intolerant from Tolerant (SIFT)
+
+The most widely-used program is SIFT. SIFT creates an extensive multiple sequence alignment for every protein, and produces a conservation score based on the likelihood of the wildtype and mutant amino acids occurring at a given position. However, we had difficulty compiling and running SIFT in a cluster setting. Furthermore, SIFT 
+
+
+Provean
+
+The performance of Provean is comparable to the leading mutation scoring programs, such as SITF, PolyPhen-2, Mutation Assessor, and CONDEL \cite{choi_predicting_2012}. Furthermore, Provean is distributed under a GPLv3 license, and uses \textit{supporting sets} of at most 45 sequences which can be precalculated and stored. If a supporting set is available, calculating the Provean score takes several seconds per mutation.
+
+
+Polymorphism Phenotyping (PolyPhen-2)
+
+Another widely-used mutation scoring tool is PolyPhen-2. However, it is trained on a dataset of deleterious and neutral human mutations. This would make it difficult for us to run benchmarks, since we would have to be meticulous to ensure that the validation set that we are using does not contain mutations that are in the PolyPhen-2 training set.
+
+
+Mutation Assessor
+
+
+CONDEL
+
+Co
+Alignments only go so far in predicting disease.
+
+
+Predict loss of function much better than gain of function 
+
+
+
+\section{Existing approaches for predicting the energetic effect of mutations}
+
+
+FoldX 
+
+
+RosettaCM
+
+
+
+PoPMuSiC
+
+
+Predicting protein thermal stability changes upon point mutations using statistical potentials: Introducing HoTMuSiC
+
+
+mCSM: predicting the effects of mutations in proteins using graph-based signatures.
+
+  - http://www.ncbi.nlm.nih.gov/pubmed/24281696
+  
+  - "To understand the roles of mutations in disease, we have evaluated their impacts not only on protein stability but also on protein-protein and protein-nucleic acid interactions".
+
+  - \cite{pires_mcsm_2014}
+
+
+Predicting Binding Free Energy Change Caused by Point Mutations with Knowledge-Modified MM/PBSA Method
+
+  - http://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1004276
+  
+  - "The core of the SAAMBE method is a modified molecular mechanics Poisson-Boltzmann Surface Area (MM/PBSA) method with residue specific dielectric constant".
+
+  - \cite{petukh_predicting_2015}
+
+
+MAESTRO \cite{laimer_maestro_2015}
+
+  % - https://biwww.che.sbg.ac.at/?page_id=477
+  
+  - MAESTRO implements a multi-agent machine learning system.
+
+  - Structure based tools AUTO-MUTE [7], CUPSAT [8], Dmutant [9], FoldX [10], Eris [11], PoPMuSiC [12], SDM [13] or mCSM [14] usually perform better than the sequence based counterparts. Recently, SDM and mCSM have been integrated into a new method called DUET [15].
+  
+ 
+INPS: predicting the impact of non-synonymous variations on protein stability from sequence
+
+  - http://bioinformatics.oxfordjournals.org/content/31/17/2816.long
+  
+  - Here, we describe INPS, a novel approach for annotating the effect of non-synonymous mutations on the protein stability from its sequence.
+
+  - \cite{fariselli_inps_2015}
+ 
+
+FireProt: Energy- and Evolution-Based Computational Design of Thermostable Multiple-Point Mutants
+
+  - http://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1004556
+  
+  - Predict the structural effect of multiple mutations.
+  
+  - "Stability effects of all possible single-point mutations were estimated using the <BuildModel> module of FoldX".
+  
+  - 
+  
+  - We demonstrate that thermostability of the model enzymes haloalkane dehalogenase DhaA and γ-hexachlorocyclohexane dehydrochlorinase LinA can be substantially increased.
+  
+  - \cite{bednar_fireprot_2015}
+
+
+
+
+\section{Homology modeling}
+
+We used the MODELLER software package to perform all homology modeling.
+
+
+
+
+
+
+
+\section{Datasets}
+
+ProTherm / ProNIT \cite{Zeng2011} \cite{kumar_protherm_2006}
+
+"MODELLER uses simulated annealing cycles along with a minimal forcefield and spatial restraints -- generally Gaussian interatomic probability densities extracted from the template structure with database-derived statistics determining the distribution width—to rapidly generate candidate structures of the target sequence from the provided template sequence".
+
+
+AB-Bind: Antibody binding mutational database for computational affinity predictions.
+
+  - Our Antibody-Bind (AB-Bind) database includes 1101 mutants with experimentally determined changes in binding free energies (ΔΔG) across 32 complexes.
+  
+  - http://www.ncbi.nlm.nih.gov/pubmed/26473627
+  
+  - \cite{sirin_ab-bind_2016}
+
+
+Rosetta benchmark \cite{o_conchuir_web_2015}
+
+Benchmark showing Rosetta doing poorly: \cite{potapov_assessing_2009}
+
+I-Mutant2, DMutant, CUPSAT, FoldX \cite{khan_performance_2010}
+
