@@ -113,7 +113,8 @@
 
 %%%%%%%%%%%%      AS CUSTOM CONFIGURATIONS      %%%%%%%%%%%%
 
-% Source: 
+% Source:
+\usepackage{float}
 \usepackage{graphicx}
 \graphicspath{ {images/} }
 
@@ -124,7 +125,6 @@
 	\chapter*{#2}
 	\addcontentsline{toc}{chapter}{#1 #2}
 }       % before-code
-
 
 
 
@@ -142,7 +142,7 @@
     sortcites=false,
     block=space,
     date=long,
-    url=false, 
+    url=false,
     doi=false,
     eprint=false,
     isbn=false,
@@ -151,14 +151,14 @@
     terseinits=true,
     firstinits=false
 ]{biblatex}
-%\usepackage[backend=biber,terseinits=true,sorting=none,isbn=false,doi=false]{biblatex}
-\addbibresource{http://localhost:23119/better-bibtex/collection?/0/J3WVJ2QQ.biblatex}
+% \usepackage[backend=biber,terseinits=true,sorting=none,isbn=false,doi=false]{biblatex}
+\addbibresource{http://localhost:23119/better-bibtex/collection?/0/MSc thesis.biblatex}
 
 
 % /Bioinformatics/Mutation scoring/
 % \addbibresource{http://localhost:23119/better-bibtex/collection?/0/RSRPJ2GB.biblatex}
 % /Computer science
-% \addbibresource{http://localhost:23119/better-bibtex/collection?/0/BHZ3WCDB.biblatex} 
+% \addbibresource{http://localhost:23119/better-bibtex/collection?/0/BHZ3WCDB.biblatex}
 % /Databases
 %\addbibresource{http://localhost:23119/better-bibtex/collection?/0/HB6PP66S.biblatex}
 % /Disease
@@ -258,10 +258,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% *** Include chapter files here. ***
-\include{introduction}
-\include{implementation}
-\include{applications}
-\include{discussion}
+% \include{introduction}
+% \include{implementation}
+% \include{applications}
+% \include{discussion}
+\include{figures}
 
 %% This adds a line for the Bibliography in the Table of Contents.
 \addcontentsline{toc}{chapter}{Bibliography}
