@@ -1,11 +1,11 @@
 # You want latexmk to *always* run, because make does not have all the info.
 # Also, include non-file targets in .PHONY so they are run regardless of any
 # file of the given name existing.
-.PHONY: MyDoc.pdf all clean
+.PHONY: msc_thesis.pdf all clean figures bibliography
 
 # The first rule in a Makefile is the one executed by default ("make"). It
 # should always be the "all" rule, so that "make" and "make all" are identical.
-all: MyDoc.pdf
+all: msc_thesis.pdf
 
 # CUSTOM BUILD RULES
 
@@ -15,10 +15,10 @@ all: MyDoc.pdf
 # you might have.
 
 %.tex: %.raw
-        ./raw2tex $< > $@
+	./raw2tex $< > $@
 
 %.tex: %.dat
-        ./dat2tex $< > $@
+	./dat2tex $< > $@
 
 # MAIN LATEXMK RULE
 
@@ -29,8 +29,14 @@ all: MyDoc.pdf
 # -interaction=nonstopmode keeps the pdflatex backend from stopping at a
 # missing file reference and interactively asking you for an alternative.
 
-MyDoc.pdf: MyDoc.tex
-        latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make MyDoc.tex
+msc_thesis.pdf: msc_thesis.tex
+	latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make -f msc_thesis.tex
+
+figures:
+	./scripts/copy_figures.sh
+
+bibliography:
+	./scripts/copy_bibliography.sh
 
 clean:
-        latexmk -CA
+	latexmk -CA
