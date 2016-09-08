@@ -1,0 +1,51 @@
+With Cath information
+
+1A47_A (P26827), Cyclomaltodextrin glucanotransferase:
+
+  Pfam
+  http://pfam.xfam.org/protein/P26827
+
+	Domain		Start	End	Color
+  Pfam	Alpha-amylase	79	399	red
+  Pfam	TIG		526	604	blue
+  Pfam	CBM_20		610	706	green
+
+  Profs
+
+	Domain		Start	End	Color
+  Profs	Alpha-amylase	28	427	red	
+  Profs	Alpha-amylase_C	428	522	yellow
+  Profs	TIG		523	606	blue
+  Profs	CBM_20		607	710	green
+
+  Note: Black regions indicate overlap
+        Gray regions indicate no allocation
+  Note: Start and end values correspond to sequence information,
+        There is a gap of 28 residues with the structure.
+
+Without Cath information
+
+3ZYO_A (P0C192), Leucine-rich repeat-containing protein 4B:
+
+  Pfam
+  http://pfam.xfam.org/protein/P0C192
+
+	Domain	Start	End	Color
+  Pfam	LRR_8	88	148	Red
+  Pfam	LRR_8	137	195	Orange
+  Pfam	LRR_8	160	221	Deepsalmon
+  Pfam	LRR_8	225	267	Magenta
+  Pfam	LRR_8	259	314	Brown
+  Pfam	I-set	366	455	Blue
+
+  Profs
+
+	Domain		Start	End	Color
+  Profs	LRRNT+LRR	54	363	Red
+  Profs	I-set		364	464	Blue
+
+  Note: Black regions indicate overlap
+        Gray regions indicate no allocation
+  Note: Start and end values correspond to sequence information.
+
+

@@ -1,0 +1,18 @@
+
+Looking at how well different domain definitions 
+cover uniprot sequence space.
+
+- 18,828 human uniprots
+- 10,868,810 amino acids
+
+----------------+--------
+Pfam only 	|  0.40 %
+Profs only 	|  4.39 %
+Gene3D only 	|  6.35 %
+Pfam and Profs 	| 16.16 %
+Profs and Gene3D|  5.12 %
+Gene3D and Pfam |  0.22 %
+All 		| 30.03 %
+----------------+--------
+
+

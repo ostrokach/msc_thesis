@@ -32,10 +32,10 @@ all: msc_thesis.pdf
 msc_thesis.pdf: msc_thesis.tex
 	latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make -f msc_thesis.tex
 
-figures:
-	./scripts/copy_figures.sh
+collectstatic:
+	./scripts/collectstatic.sh
 
-bibliography:
+bib:
 	./scripts/copy_bibliography.sh
 
 clean:
