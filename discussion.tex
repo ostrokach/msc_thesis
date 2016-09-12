@@ -12,7 +12,7 @@ Cystic fibrosis
 
 Long QT syndrome
 
-  - Assessment of the predictive accuracy of five in silico prediction tools, alone or in combination, and two metaservers to classify long QT syndrome gene mutations.
+  - Assessment of the predictive accuracy of five \textit{in-silico} prediction tools, alone or in combination, and two meta-servers to classify long QT syndrome gene mutations.
 
   - \url{http://www.ncbi.nlm.nih.gov/pubmed/25967940}
 
@@ -52,7 +52,7 @@ Most structural features play a surprisingly small role in the performance of th
 
 Long-term MD is not useful for optimizing structures in most cases \cite{raval_refinement_2012}.
 
-\subsection{Feature transformation with ensembles of trees}
+\subsection{Feature transformation using ensembles of trees}
 
 In this work, we attempted to improve the performance of ELASPIC by keeping track of its performance on mutation deleteriousness datasets throughout cross-validation and feature selection. While this approach should prevent us from selecting a predictor which is over-fitted on the training dataset, it does not improve the pool of predictors from which we make this selection.
 
@@ -66,13 +66,13 @@ An additional advantage is that the feature learning part of the predictor would
 
 
 
-\section{Mutation affecting multiple amino acids}
+\section{Multi-residue mutations}
 
-ELASPIC can easily be extended to calculate the $\Delta \Delta G$ for mutations invovling multiple amino acids. The tricky part is that the number of features changes with the number of amino acids that are mutated. We could address this by treating a mutation affecting multiple amino acids as a set of single amino acid mutations. For example, we could use the following recursive strategy:
+ELASPIC can easily be extended to calculate the $\Delta \Delta G$ for mutations involving multiple amino acids. The tricky part is that the number of features changes with the number of amino acids that are mutated. We could address this by treating a mutation affecting multiple amino acids as a set of single amino acid mutations. For example, we could use the following recursive strategy:
 
 \begin{enumerate}
     \item Introdue each of the single amino acid mutations, one at a time.
-    \item Select the single amino acid mutation with the most stabilising effect.
+    \item Select the single amino acid mutation with the most stabilizing effect.
     \item Repeat for the remaining mutations, using the structure containing the mutation selected in Step 2.
 \end{enumerate}
 
@@ -82,7 +82,7 @@ In the case of the ELASPIC core predictor, we could create a dataset of multiple
 
 In the case of the ELASPIC interface predictor, we could construct a dataset from phage-display read counts, and cross-validate ELASPIC while keeping track of its performance on phage display counts. Could then recursively incorporate the phage display data into the training set, weighting it by how well the ELASPIC predictor does on those mutations, as determined through cross-validation.
 
-It is likely that the performance of the ELASPIC predictor would be lower for mutations affecting multiple amino acids than for mutations affecting a single amino acids, as the former is more likely to induce changes in the conformation of the protein that are not modelled by ELASPIC. This drop in performance could in-part be ameliorated by including a backbone relaxation step between each mutation, using molecular dynamics \cite{abraham_gromacs:_2015}, backrub \cite{smith_predicting_2011}, or other algorithms \cite{sun_protein_2016}.
+It is likely that the performance of the ELASPIC predictor would be lower for mutations affecting multiple amino acids than for mutations affecting a single amino acids, as the former is more likely to induce changes in the conformation of the protein that are not modelled by ELASPIC. This drop in performance could in-part be ameliorated by including a backbone relaxation step between each mutation, using molecular dynamics \cite{abraham_gromacs:_2015}, Rosetta Backrub \cite{smith_predicting_2011}, or other algorithms \cite{sun_protein_2016}.
 
 If the ELASPIC predictor can achieve reasonable results for mutations affecting multiple amino acids, it could be used ``in reverse'' to design protein domains with increased stability and protein interfaces with increased affinity.
 
@@ -100,6 +100,12 @@ FireProt: Energy- and Evolution-Based Computational Design of Thermostable Multi
 
 
 
+HOPE THAT PROVEAN WOULD AT LEAST PARTIALLY MAKE UP FOR THE LIMITING ASSUMPTION THAT THE BACKBONE REMAINS STABLE BETWEEN MUTATIONS.
+
+SCIENTIFICALLY INTERESTING TO SEE WHAT EFFECT MD RELAXATIONS WOULD HAVE ON THE PERFORMANCE OF THE ALGORITHM.
+
+
+
 \section{Additional interaction types}
 
 \subsection{Protein-protein interactions}
@@ -113,21 +119,24 @@ Predict PPIs: PRISM: Protein interaction by structure matching.
 
 Platinum: Protein-ligand affinity change upon mutation database.
 
-  - \url{http://bleoberis.bioc.cam.ac.uk/platinum/}
+- \url{http://bleoberis.bioc.cam.ac.uk/platinum/}
 
 BioLiP is a semi-manually curated database for high-quality, biologically relevant ligand-protein binding interactions.
 
-  - \url{http://zhanglab.ccmb.med.umich.edu/BioLiP/}
+- \url{http://zhanglab.ccmb.med.umich.edu/BioLiP/}
 
-  - The structure data are collected primarily from the Protein Data Bank, with biological insights mined from literature and other specific databases.
+- The structure data are collected primarily from the Protein Data Bank, with biological insights mined from literature and other specific databases.
 
 
 \subsection{Protein-DNA/RNA interactions}
 
 ProNIT
 
-[RBPDB: a database of RNA-binding specificities](\url{http://rbpdb.ccbr.utoronto.ca})
-: - [Paper](\url{http://nar.oxfordjournals.org/content/39/suppl_1/D301})
+RBPDB: a database of RNA-binding specificities
+
+\url{http://rbpdb.ccbr.utoronto.ca}
+
+Paper: \url{http://nar.oxfordjournals.org/content/39/suppl_1/D301}
 
 
 \subsection{Protein-peptide interactions}

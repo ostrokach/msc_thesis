@@ -2,23 +2,12 @@
 
 \mychapter{3}{Results} \label{chap:results}
 
-- Statistics on homology modelling coverage
-
 - Accuracy over different sequence identity bins
 
 - within protein correlation on the test set
 
 
-\section{Energetic effect of benign and deleterious mutations}
-
-
-
-\section{Alanine scanning of protein interfaces}
-
-- Show a histogram of $\Delta \Delta G$ values for all interfaces.
-
-- Predict whether a peptide is going to be anti-proliferative based on the total absolute $\Delta \Delta G$ score over the interface.
-
+\section{Anti-proliferative peptides}
 
 \begin{figure}[H]
 	\centering
@@ -27,21 +16,9 @@
 \end{figure}
 
 
-
-\section{Anti-proliferative peptides}
-
-\clearpage
-
 % === core ===
 
 % Training set stats
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.65\textwidth]{static/elaspic_training_set/data_statistics/training_set_overlap_data_df_core.pdf}
-	\caption{Size and overlap between the core and interface predictor datasets.}
-\end{figure}
-
 
 \begin{table}[ht]
 \caption{Description of the dataset used to train the core predictor.} \label{tab:core_datasets}
@@ -58,47 +35,57 @@
 \end{tabular}
 \end{table}
 
+
 % Machine learning
 
 \begin{figure}[ht]
-	% \centering
-	\begin{subfigure}[b]{0.6\textwidth}
-		\includegraphics[width=1\linewidth]{static/elaspic_training_set/machine_learning/gridsearch_core.pdf}
-		\caption{Grid-search over parameter space.}
+	\centering
+
+	\begin{subfigure}[b]{1.0\textwidth}
+		\centering
+		\includegraphics[width=0.6\linewidth]{static/elaspic_training_set/machine_learning/gridsearch_core.pdf}
+		\caption{Grid-search over parameter space for the ELASPIC core predictor.}
 		\label{fig:gridsearch_core}
 	\end{subfigure}
 
-	\begin{subfigure}[b]{0.75\textwidth}
-		\includegraphics[width=1\linewidth]{static/elaspic_training_set/machine_learning/feature_elimination_core.pdf}
-		\caption{Feature elimination.}
+	\begin{subfigure}[b]{1\textwidth}
+		\centering
+		\includegraphics[width=0.75\linewidth]{static/elaspic_training_set/machine_learning/feature_elimination_core.pdf}
+		\caption{Feature elimination curve for the ELASPIC core predictor.}
 		\label{fig:feature_elimination_core}
 	\end{subfigure}
 
-	\caption{Machine learning pipeline.}
+	\caption{Core predictor training.}
 \end{figure}
 
-
-\clearpage
 
 \begin{figure}[ht]
-	\centering
-	\includegraphics[width=1.0\linewidth]{static/elaspic_training_set/validation/crossvalidation_performance_core.pdf}
-	\caption{Performance on the training / validation datasets.}
+	% \centering
+
+	\begin{subfigure}[b]{1.0\textwidth}
+		\centering
+		\includegraphics[width=0.6\linewidth]{static/elaspic_training_set/validation/crossvalidation_performance_core.pdf}
+		\caption{Four-fold cross-validation performance on the training dataset. Colors indicate cross-validation bins.}
+		\vspace*{10mm}
+	\end{subfigure}
+
+	\begin{subfigure}[b]{1.0\textwidth}
+		\centering
+		\includegraphics[width=0.8\textwidth]{static/elaspic_training_set/validation/validation_performance_core.pdf}
+		\caption{Performance on the validation datasets.}
+		\vspace*{10mm}
+	\end{subfigure}
+
+	\begin{subfigure}[b]{1.0\textwidth}
+		\centering
+		\includegraphics[width=1.0\textwidth]{static/elaspic_training_set/validation/test_performance_core.pdf}
+		\caption{Performance on the test datasets.}
+		% \vspace*{10mm}
+	\end{subfigure}
+
+	\caption{Performance of the core predictor on the training (a), validation (b) and test sets (c).}
 \end{figure}
 
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=1.0\textwidth]{static/elaspic_training_set/validation/validation_performance_core.pdf}
-	\caption{Performance on the test datasets.}
-\end{figure}
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=1.0\textwidth]{static/elaspic_training_set/validation/test_performance_interface.pdf}
-	\caption{Performance on the test datasets.}
-\end{figure}
-
-\clearpage
 
 % Final results
 
@@ -155,45 +142,53 @@
 % Machine learning
 
 \begin{figure}[ht]
-	% \centering
-	\begin{subfigure}[b]{0.6\textwidth}
-		\includegraphics[width=1\linewidth]{static/elaspic_training_set/machine_learning/gridsearch_interface.pdf}
+	\centering
+
+	\begin{subfigure}[b]{1.0\textwidth}
+		\centering
+		\includegraphics[width=0.6\linewidth]{static/elaspic_training_set/machine_learning/gridsearch_interface.pdf}
 		\caption{Grid-search over parameter space.}
 		\label{fig:gridsearch_interface}
 	\end{subfigure}
 
-	\begin{subfigure}[b]{0.75\textwidth}
-		\includegraphics[width=1\linewidth]{static/elaspic_training_set/machine_learning/feature_elimination_interface.pdf}
+	\begin{subfigure}[b]{1\textwidth}
+		\centering
+		\includegraphics[width=0.75\linewidth]{static/elaspic_training_set/machine_learning/feature_elimination_interface.pdf}
 		\caption{Feature elimination.}
 		\label{fig:feature_elimination_interface}
 	\end{subfigure}
 
-	\caption{Machine learning pipeline.}
+	\caption{Interface predictor training.}
 \end{figure}
-
 
 
 \begin{figure}[ht]
-	\centering
-	\includegraphics[width=1.0\linewidth]{static/elaspic_training_set/validation/crossvalidation_performance_interface.pdf}
-	\caption{Performance on the training / validation datasets.}
+	% \centering
+
+	\begin{subfigure}[b]{1.0\textwidth}
+		\centering
+		\includegraphics[width=0.6\linewidth]{static/elaspic_training_set/validation/crossvalidation_performance_interface.pdf}
+		\caption{Four-fold cross-validation performance on the training dataset. Colors indicate cross-validation bins.}
+		\vspace*{10mm}
+	\end{subfigure}
+
+	\begin{subfigure}[b]{1.0\textwidth}
+		\centering
+		\includegraphics[width=0.8\textwidth]{static/elaspic_training_set/validation/validation_performance_interface.pdf}
+		\caption{Performance on the validation datasets.}
+		\vspace*{10mm}
+	\end{subfigure}
+
+	\begin{subfigure}[b]{1.0\textwidth}
+		\centering
+		\includegraphics[width=1.0\textwidth]{static/elaspic_training_set/validation/test_performance_interface.pdf}
+		\caption{Performance on the test datasets.}
+		% \vspace*{10mm}
+	\end{subfigure}
+
+	\caption{Performance of the interface predictor on the training (a), validation (b) and test sets (c).}
 \end{figure}
 
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=1.0\textwidth]{static/elaspic_training_set/validation/validation_performance_interface.pdf}
-	\caption{Performance on the test datasets.}
-\end{figure}
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=1.0\textwidth]{static/elaspic_training_set/validation/test_performance_interface.pdf}
-	\caption{Performance on the test datasets.}
-\end{figure}
-
-\clearpage
-
-\clearpage
 
 % Final results
 

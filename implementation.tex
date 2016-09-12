@@ -2,10 +2,7 @@
 
 \mychapter{2}{Implementation} \label{chap:implementation}
 
-asdf  sdfASd s s asd fdas
- asd dsfsdfdd
-
- dsfsadfa sfdas 
+- Statistics on homology modelling coverage
 
 \section{ELASPIC pipeline}
 
@@ -97,29 +94,6 @@ We built two core predictors and two interface predictors:
 \end{enumerate}
 
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.3]{image117}
-	\caption{Variable elimination.}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.2]{image65}
-	\caption{Cross-validation performance before variable elimination.}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.2]{image103}
-	\caption{Cross-validation performance after variable elimination.}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.3]{image02}
-	\caption{Feature importances after variable elimination.}
-\end{figure}
 
 
 
@@ -134,28 +108,6 @@ Compare how well Provean, FoldX, and `ELASPIC with Provean' and `ELASPIC without
 \item COSMIC driver vs. passenger.
 \end{itemize}
 
-
-
-
-
-
-
-% \subsubsection{Chaperone interaction data}
-%
-% \begin{figure}[H]
-% 	\centering
-% 	\includegraphics[scale=0.4]{image75}
-% 	\caption[Core Validation]{Validation of the ELASPIC core predictor using chaperone interaction data from "Widespread Macromolecular Interaction Perturbations in Human Genetic Disorders".}
-% \end{figure}
-%
-%
-% \begin{figure}[H]
-% 	\centering
-% 	\includegraphics[scale=0.4]{image52}
-% 	\caption[Interface Validation]{Validation of the ELASPIC core interface predictor using \textit{Gaussia princeps} luciferase protein complementation assay from "Widespread Macromolecular Interaction Perturbations in Human Genetic Disorders".}
-% \end{figure}
-%
-%
 
 
 
@@ -213,3 +165,11 @@ downloads page: \url{http://elaspic.kimlab.org/static/download/}. The source cod
 Sanhi et al. databaset (taipale)
 
 \subsection{Interface}
+
+
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.65\textwidth]{static/elaspic_training_set/data_statistics/training_set_overlap_data_df_core.pdf}
+	\caption{Size and overlap between the core and interface predictor datasets.}
+\end{figure}
