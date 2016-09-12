@@ -1,0 +1,221 @@
+% !TEX root = msc_thesis.tex
+
+\mychapter{3}{Results} \label{chap:results}
+
+- Statistics on homology modelling coverage
+
+- Accuracy over different sequence identity bins
+
+- within protein correlation on the test set
+
+
+\section{Energetic effect of benign and deleterious mutations}
+
+
+
+\section{Alanine scanning of protein interfaces}
+
+- Show a histogram of $\Delta \Delta G$ values for all interfaces.
+
+- Predict whether a peptide is going to be anti-proliferative based on the total absolute $\Delta \Delta G$ score over the interface.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.24]{image98}
+	\caption[pipeline]{The drop-off score is higher for peptides that have a higher sum of the absolute interface FoldX energy.}
+\end{figure}
+
+
+
+\section{Anti-proliferative peptides}
+
+\clearpage
+
+% === core ===
+
+% Training set stats
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.65\textwidth]{static/elaspic_training_set/data_statistics/training_set_overlap_data_df_core.pdf}
+	\caption{Size and overlap between the core and interface predictor datasets.}
+\end{figure}
+
+
+\begin{table}[ht]
+\caption{Description of the dataset used to train the core predictor.} \label{tab:core_datasets}
+\begin{tabular}{l | p{13cm}}
+	\toprule
+	Dataset name & Experimental feature \\
+	\midrule
+	Protherm \cite{kumar_protherm_2006} & Change in the Gibbs free energy of protein folding ($\Delta \Delta G$). \\
+	Taipale \cite{sahni_widespread_2015} & Change in the interaction with various quality control factors (QCFs), measured using the LUMIER assay. \\
+	Humsavar \cite{consortium_uniprot:_2015} & $1$ if the mutation is annotated with at least one disease in the UniProt \textit{humsavar.txt} file. $0$ if the mutation is annotated as ``Polymorphism'' in the UniProt \textit{humsavar.txt} file. \\
+	ClinVar \cite{landrum_clinvar:_2016} & $1$ if the mutation is found in the ClinVar \textit{clinvar\_20160531.vcf} file. $0$ if the mutation is found in the ClinVar \textit{common\_no\_known\_medical\_impact\_20160531.vcf} file. \\
+	COSMIC \cite{forbes_cosmic:_2015} & $1$ if the mutation is predicted to be deleterious by FATHMM in the COSMIC database. $0$ if the mutation is predicted to be benign by FATHMM in the COSMIC database. \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+% Machine learning
+
+\begin{figure}[ht]
+	% \centering
+	\begin{subfigure}[b]{0.6\textwidth}
+		\includegraphics[width=1\linewidth]{static/elaspic_training_set/machine_learning/gridsearch_core.pdf}
+		\caption{Grid-search over parameter space.}
+		\label{fig:gridsearch_core}
+	\end{subfigure}
+
+	\begin{subfigure}[b]{0.75\textwidth}
+		\includegraphics[width=1\linewidth]{static/elaspic_training_set/machine_learning/feature_elimination_core.pdf}
+		\caption{Feature elimination.}
+		\label{fig:feature_elimination_core}
+	\end{subfigure}
+
+	\caption{Machine learning pipeline.}
+\end{figure}
+
+
+\clearpage
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.0\linewidth]{static/elaspic_training_set/validation/crossvalidation_performance_core.pdf}
+	\caption{Performance on the training / validation datasets.}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.0\textwidth]{static/elaspic_training_set/validation/validation_performance_core.pdf}
+	\caption{Performance on the test datasets.}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.0\textwidth]{static/elaspic_training_set/validation/test_performance_interface.pdf}
+	\caption{Performance on the test datasets.}
+\end{figure}
+
+\clearpage
+
+% Final results
+
+\begin{table}[ht]
+\caption{Core features.} \label{tab:core_features}
+\begin{tabular}{l | p{13cm}}
+	\toprule
+	Feature name & Feature description \\
+	\midrule
+	... & ... \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}[ht]
+\caption{Core parameters.} \label{tab:core_parameters}
+\begin{tabular}{l | l | l}
+	\toprule
+	Parameter label & Parameter description & Parameter value \\
+	\midrule
+	... & ... \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+
+% === interface ===
+
+% Training set stats
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.65\textwidth]{static/elaspic_training_set/data_statistics/training_set_overlap_data_df_interface.pdf}
+	\caption{Size and overlap between the core and interface predictor datasets.}
+\end{figure}
+
+\begin{table}[ht]
+\caption{Description of the dataset used to train the interface predictor.} \label{tab:interface_datasets}
+\begin{tabular}{l | p{13cm}}
+	\toprule
+	Dataset name & Experimental feature \\
+	\midrule
+	Skempi \cite{kumar_protherm_2006} & Change in the Gibbs free energy of protein folding ($\Delta \Delta G$). \\
+	Taipale \cite{sahni_widespread_2015} & Change in the interaction with various quality control factors (QCFs), measured using the LUMIER assay. \\
+	Humsavar \cite{consortium_uniprot:_2015} & $1$ if the mutation is annotated with at least one disease in the UniProt \textit{humsavar.txt} file. $0$ if the mutation is annotated as ``Polymorphism'' in the UniProt \textit{humsavar.txt} file. \\
+	ClinVar \cite{landrum_clinvar:_2016} & $1$ if the mutation is found in the ClinVar \textit{clinvar\_20160531.vcf} file. $0$ if the mutation is found in the ClinVar \textit{common\_no\_known\_medical\_impact\_20160531.vcf} file. \\
+	COSMIC \cite{forbes_cosmic:_2015} & $1$ if the mutation is predicted to be deleterious by FATHMM in the COSMIC database. $0$ if the mutation is predicted to be benign by FATHMM in the COSMIC database. \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+
+% Machine learning
+
+\begin{figure}[ht]
+	% \centering
+	\begin{subfigure}[b]{0.6\textwidth}
+		\includegraphics[width=1\linewidth]{static/elaspic_training_set/machine_learning/gridsearch_interface.pdf}
+		\caption{Grid-search over parameter space.}
+		\label{fig:gridsearch_interface}
+	\end{subfigure}
+
+	\begin{subfigure}[b]{0.75\textwidth}
+		\includegraphics[width=1\linewidth]{static/elaspic_training_set/machine_learning/feature_elimination_interface.pdf}
+		\caption{Feature elimination.}
+		\label{fig:feature_elimination_interface}
+	\end{subfigure}
+
+	\caption{Machine learning pipeline.}
+\end{figure}
+
+
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.0\linewidth]{static/elaspic_training_set/validation/crossvalidation_performance_interface.pdf}
+	\caption{Performance on the training / validation datasets.}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.0\textwidth]{static/elaspic_training_set/validation/validation_performance_interface.pdf}
+	\caption{Performance on the test datasets.}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=1.0\textwidth]{static/elaspic_training_set/validation/test_performance_interface.pdf}
+	\caption{Performance on the test datasets.}
+\end{figure}
+
+\clearpage
+
+\clearpage
+
+% Final results
+
+\begin{table}[ht]
+\caption{Interface features.} \label{tab:interface_features}
+\begin{tabular}{l | p{13cm}}
+	\toprule
+	Feature name & Feature description \\
+	\midrule
+	... & ... \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}[ht]
+\caption{Interface parameters.} \label{tab:interface_parameters}
+\begin{tabular}{l | l | l}
+	\toprule
+	Parameter label & Parameter description & Parameter value \\
+	\midrule
+	... & ... \\
+	\bottomrule
+\end{tabular}
+\end{table}

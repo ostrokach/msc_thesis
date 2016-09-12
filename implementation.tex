@@ -1,21 +1,23 @@
 % !TEX root = msc_thesis.tex
 
-\mychapter{2}{Implementation}
+\mychapter{2}{Implementation} \label{chap:implementation}
 
-\section{Training sets}
+asdf  sdfASd s s asd fdas
+ asd dsfsdfdd
 
-\subsection{Core}
+ dsfsadfa sfdas 
 
-Sanhi et al. databaset (taipale)
+\section{ELASPIC pipeline}
 
-\subsection{Interface}
+\section{Homology modeling}
 
+We used the MODELLER software package to perform all homology modeling.
+
+``MODELLER uses simulated annealing cycles along with a minimal forcefield and spatial restraints -- generally Gaussian interatomic probability densities extracted from the template structure with database-derived statistics determining the distribution width—to rapidly generate candidate structures of the target sequence from the provided template sequence.''
 
 \subsection{Standalone pipeline}
 
 \ref{fig:elaspic_pipeline} right
-
-\section{ELASPIC pipeline}
 
 An overview of the ELASPIC pipeline is presented in Figure \ref{fig:elaspic_pipeline}. ELASPIC includes a library Python scripts for construction sequence alignments, constructing Provean supporting sets and computing the Provean score, constructing homology models, running FoldX, and predicting the $\Delta \Delta G$ of the mutation. It also includes a ``Standalone Pipeline'' and a ``Database Pipeline'', which include command line options for mutating a protein structure.
 
@@ -43,13 +45,13 @@ The general overview of the database pipleine is presented in \ref{fig:elaspic_p
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=1.0\textwidth]{static/elaspic/elaspic_schema.pdf}
-	\caption{Database schema used by the ELASPIC pipeline. Tables on the green plate titled Profs are calculated using the Profs pipeline, as described in \cite{witvliet_elaspic_2016}. Tables on the purple plate titled ELASPIC are calculated using the ELASPIC pipeline, following the procedure outlined in \ref{fig:elaspic_pipeline}. A detailed description of each table can be found in \ref{fig:elaspic_database_schema}.}
-    \label{fig:elaspic_schema}
+	\caption{Database schema used by the ELASPIC pipeline. Tables on the green plate titled Profs are calculated using the Profs pipeline, as described in \cite{witvliet_elaspic_2016}. Tables on the purple plate titled ELASPIC are calculated using the ELASPIC pipeline, following the procedure outlined in \ref{fig:elaspic_pipeline}. A detailed description of each table can be found in \ref{tab:elaspic_database_schema}.}
+    \label{fig:elaspic_database_schema}
 \end{figure}
 
 
 \begin{table}[ht]
-\caption{ELASPIC database tables.} \label{tab:elaspic_schema_description}
+\caption{ELASPIC database tables.} \label{tab:elaspic_database_schema}
 \begin{tabular}{l | p{10cm}}
 	\toprule
 	Table name & Table description \\
@@ -69,8 +71,6 @@ The general overview of the database pipleine is presented in \ref{fig:elaspic_p
 	\bottomrule
 \end{tabular}
 \end{table}
-
-
 
 
 \section{ELASPIC predictor}
@@ -177,7 +177,18 @@ The ELASPIC project was started by Niklas Berliner and others in 2014 \cite{berl
 ELASPIC uses Modeller \cite{webb_comparative_2002} to construct homology models of domains and domain-domain interactions, FoldX to optimize those model and to introduce mutations \cite{schymkowitz_foldx_2005}, and the ELASPIC predictor to combine FoldX energy scores with sequence-based and other features and predict the energetic impact of a mutation on the stability of a single domain or the affinity between two domains. A flowchart describing the ELASPIC pipeline is presented in \ref{fig:elaspic_pipeline}. At each step in the pipeline, a local database is queried to see if the required information has already been calculated. If the information is available, the pipeline moves to the next step. If the information is not available, the pipeline runs the module that generates the required information, stores the generated information in the database for future access, and then moves to the next step. If the specified mutation falls outside of every domain in the protein, no predictions are returned. Otherwise, the pipeline evaluates the impact of the mutation on the stability of the domain and, if the mutation falls in a domain interface, on the affinity between two domains. In order to expedite the evaluation of mutations, we precalculated homology models and Provean supporting sets for all human proteins. Structural and sequential features, and predicted ∆∆G scores, have also been precalculated for the majority of mutations listed in the Uniprot humsavar file \cite{consortium_uniprot:_2015} and in the COSMIC \cite{forbes_cosmic:_2015} and ClinVar \cite{landrum_clinvar:_2016} databases.
 
 Provean supporting sets, homology models and mutation ΔΔG scores are available from the ELASPIC
-downloads page: http://elaspic.kimlab.org/static/download/. The source code of the python package implementing the ELASPIC pipeline is available from https://github.com/kimlaborg/elaspic, and the documentation for the ELASPIC pipeline can be accessed online at http://elaspic.readthedocs.org/.
+downloads page: \url{http://elaspic.kimlab.org/static/download/}. The source code of the python package implementing the ELASPIC pipeline is available from \url{https://github.com/kimlaborg/elaspic}, and the documentation for the ELASPIC pipeline can be accessed online at \url{http://elaspic.readthedocs.org/}.
+
+\section{Homology modelling of the human proteome}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.3]{elaspic_statistics/missing_template}
+	\includegraphics[scale=0.3]{elaspic_statistics/missing_model_protein}
+	\includegraphics[scale=0.3]{elaspic_statistics/structural_coverage_hist}
+	\caption{\textbf{Left}: statistics of how many homology models we were able to calculate. \textbf{Right}: structural coverage for proteins with at least one domain with a structural model.}
+\end{figure}
+
 
 
 \section{ELASPIC web service}
@@ -192,3 +203,13 @@ downloads page: http://elaspic.kimlab.org/static/download/. The source code of t
 	jobstatus & GET /submitjob & View the results of a job.
 	\end{tabular}
 \end{table}
+
+
+
+\section{Training sets}
+
+\subsection{Core}
+
+Sanhi et al. databaset (taipale)
+
+\subsection{Interface}

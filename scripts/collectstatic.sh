@@ -25,15 +25,14 @@ copy_datapkg_figures () {
 rsync -av --include '*/' --include '*.pdf' --exclude '*' ./figures/ ./static/
 
 
-copy_datapkg_figures elaspic_training_set core_data_statistics \
-    training_set_overlap_final initial_performance
+copy_datapkg_figures elaspic_training_set data_statistics \
+    training_set_overlap_data_df_core training_set_overlap_data_df_interface
 
-copy_datapkg_figures elaspic_training_set core_machine_learning \
-    gridsearch feature_elimination final_performance
+copy_datapkg_figures elaspic_training_set machine_learning \
+    gridsearch_core gridsearch_interface \
+    feature_elimination_core feature_elimination_interface
 
-
-copy_datapkg_figures elaspic_training_set interface_data_statistics \
-    training_set_overlap_final initial_performance
-
-copy_datapkg_figures elaspic_training_set interface_machine_learning \
-    gridsearch feature_elimination final_performance
+copy_datapkg_figures elaspic_training_set validation \
+    crossvalidation_performance_core crossvalidation_performance_interface \
+    validation_performance_core validation_performance_interface \
+    test_performance_core test_performance_interface

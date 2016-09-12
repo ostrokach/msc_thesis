@@ -35,8 +35,12 @@ msc_thesis.pdf: msc_thesis.tex
 collectstatic:
 	./scripts/collectstatic.sh
 
-bib:
+bibliography:
 	./scripts/copy_bibliography.sh
+
+bib: bibliography
+
+biblio: bibliography
 
 clean:
 	latexmk -CA
