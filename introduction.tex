@@ -2,30 +2,36 @@
 
 \mychapter{1}{Introduction}
 
+\section{Background}
+
+Recent advances in DNA sequence technology have drastically lowered the cost and improved the accuracy of genome sequencing \cite{wetterstrand_dna_2016}. This has made exome and whole-genome sequencing a viable and cost-effective tool in both the laboratory and in the clinic \cite{chrystoja_whole_2014}, and has led to an enormous growth in the amount of genomic data that is being generated. However, interpreting such genomic data to produce meaningful and actionable results remains a challenge.
+
+\textit{In vitro} and \textit{in vivo} experiments remain the gold standard in elucidating the effect of mutations. However, evaluating experimentally the effect of all discovered mutants is not feasible. Computational techniques have been developed to predict the effect of different mutations and to prioritize them for experimental validation. Those techniques generally use conservation score describing the likelihood that a particular amino acid being found in the particular position in orthologous proteins.
+
+The most widely-used program for predicting the deleteriousness of a mutation is Sorting Intolerant from Tolerant (SIFT) \cite{ng_sift:_2003}. SIFT runs PSI-Blast to create a multiple sequence alignment for the query protein, and computes a conservation score by looking at the likelihood of the wildtype and mutant amino acids occurring at a given position in the alignment. While SIFT is a well-established tool in the field, it is difficult to compile and install on a local machine. Furthermore, multiple sequence alignments constructed by SIFT can be several megabytes in size, and caching this data for an entire proteome would require a non-trivial amount of storage space.
+
+Another popular sequence-based algorithm is Provean \cite{choi_predicting_2012}. Provean also calculates uses PSI-Blast to calculate a multiple sequence alignment. However, it then runs CD-HIT to select under 100 representative sequences capturing the diversity of the alignment, and then performs pairwise alignments with this ``supporting set'' to predict the final score. Provean is reported to achieve similar performance to SIFT. However, unlike SIFT, it is freely available under the GPLv3 license, it compiles easily and runs on modern Linux distributions. Furthermore, Provean is distributed under a  license, and uses \textit{supporting sets} of at most 45 sequences which can be precalculated and stored. If a supporting set is available, calculating the Provean score takes several seconds per mutation.
+
+The performance of Provean is comparable to the leading mutation scoring programs, such as SITF, PolyPhen-2, Mutation Assessor, and CONDEL \cite{choi_predicting_2012}. Furthermore, Provean is distributed under a GPLv3 license, and uses \textit{supporting sets} of at most 45 sequences which can precalculated and stored. If a supporting set is available, calculating the Provean score takes several seconds per mutation.
+
+Another widely-used mutaiton scoring tool is PolyPhen-2. It is one of the packages predicted for
+
+Many other tools have been developed that offer various advantages over SIFT / Provean. PolyPhen-2 \cite{adzhubei_predicting_2001} uses support vector machines to combine a conservation score with different sequential and structural features of the wildtype and mutant residue. However, since PolyPhen-2 is trained on a dataset of human deleterious mutations, it is difficult to use in downstream applications, as one would have to make sure to exclude the PolyPhen-2 training set throughout the training and validation process. FATHMM \cite{shihab_ranking_2014} constructs a hidden Markov model based on the alignment, and is reported to achieve marginally higher accuracy than SIFT / Provean. Other techniques offering various advantages over SIFT / Provean include MutPred \cite{li_automated_2009}, MutationAssesor \cite{network_integrated_2011}, CADD \cite{kircher_general_2014}, CONDEL \cite{choi_predicting_2012}, and others.
+
+Despite the proliferation of tools predicting the deleteriousness of different SNPs, our ability to act on those predictions remains limited. Existing computational methods are limited in their accuracy and the type of information that they can provide. Most existing tools use a conservation score. While millions of single nucleotide polymorphisms (SNPs) have been implicated in thousands of diseases, approaches for predicting the phenotypic effect of newly-discovered mutations are still in their infancy. One of the reasons is that while sequence-based tools achieve reasonably good performance at predicting whether or not a given mutation is going to be deleterious, they fall short in predicting \textit{why} that mutation is deleterious. This lack of actionable predictions limits the usability of the vast DNA sequencing data that has been generated. However, the etiology by which the mutations cause or contribute to a disease are often unknown.
+
+
+
+\section{Structural approaches to predicting the effect of mutations}
+
+Statistical potentials
+
+Physics-based methods
+the electrostatic, van der Waals, solvent accessible surface area, and entropy terms
+
+Concoord/Poisson-Boltzmann surface area (CC/PBSA server)
+
 The central dogma of biology is that DNA is transcribed into RNA which is translated into Protein.
-
-% Sequence-based
-
-Advances in DNA sequencing technology have led to an enormous growth in the number of genome sequences that are available. Millions of single nucleotide polymorphisms (SNPs) have been implicated in thousands of diseases. However, the etiology by which the mutations cause or contribute to a disease are often unknown.
-
-Interpreting the variation in those genome sequences in order arrive at actionable results remains a challenge. Evaluating experimentally the effect of all discovered mutations is not feasible both in terms of the time and the cost that would be required. Computational techniques have been developed to predict the effect of mutations and prioritize them for experimental validation.
-
-Sequence-based tools are the de-facto standard for predicting whether variants in genome sequences are deleterious. Tools such as Ensembl VEP, ANNOVAR and SNPeff can leverage databases of pre-calculated scores (dbNSFP) to annotate VCF files with the score predicted by each of the tools.
-Such algorithms generally fall into three categories:
-
-Sequence-based approaches which predict the effect of mutation by using different metrics describing the conservation of a particular residue. Examples include Mutation Assessor, CONDEL (ensemble approach)
-
-The most widely-used program is Sorting Intolerant from Tolerant or \textbf{SIFT}. SIFT creates an extensive multiple sequence alignment for every protein, and produces a conservation score based on the likelihood of the wildtype and mutant amino acids occurring at a given position. However, we had difficulty compiling and running SIFT in a cluster setting. Furthermore
-
-Another widely-used mutation scoring tool is \textbf{PolyPhen-2}. However, it is trained on a dataset of deleterious and neutral human mutations. This would make it difficult for us to run benchmarks, since we would have to be meticulous to ensure that the validation set that we are using does not contain mutations that are in the PolyPhen-2 training set.
-
-Another popular sequence-based algorithm is \textbf{Provean}. Provean is comparable to the leading mutation scoring programs, such as SIFT, PolyPhen-2, Mutation Assessor, and CONDEL \cite{choi_predicting_2012}. Furthermore, Provean is distributed under a GPLv3 license, and uses \textit{supporting sets} of at most 45 sequences which can be precalculated and stored. If a supporting set is available, calculating the Provean score takes several seconds per mutation.
-
-Other sequence-based algorithms include FATHMM, CONDEL, MutationAssesor, MutPred, and others.
-
-Despite the proliferation of tools predicting the deleteriousness of different SNPs, our ability to act on those predictions remains limited. One of the reasons is that while sequence-based tools achieve reasonably good performance at predicting whether or not a given mutation is going to be deleterious, they fall short in predicting \textit{why} that mutation is deleterious. This lack of actionable predictions limits the usability of the vast DNA sequencing data that has been generated.
-
-% Structure-based
 
 One reason for out lack of ability in interpreting is the focus on the sequence-level features, while in the majority of missense mutations, it is the alteration in the function of the transcribed protein which is responsible for the detrimental effect of mutations.
 
@@ -83,7 +89,18 @@ Predicting Binding Free Energy Change Caused by Point Mutations with Knowledge-M
   - \cite{petukh_predicting_2015}
 
 
-\subsection{Goals and objectives}
+
+% Benchmarks
+
+Rosetta benchmark \cite{o_conchuir_web_2015}
+
+Benchmark showing Rosetta doing poorly: \cite{potapov_assessing_2009}
+
+I-Mutant2, DMutant, CUPSAT, FoldX \cite{khan_performance_2010}
+
+
+
+\section{Goals and objectives}
 
 \begin{itemize}
     \item Evaluate how well we can predict the deleteriousness of a mutation by measuring the effect of protein folding on protein stability.
@@ -95,25 +112,7 @@ Predicting Binding Free Energy Change Caused by Point Mutations with Knowledge-M
 
 
 
-\section{Published post factum}
 
-% Deleteriousness
-
-VIPUR \cite{baugh_robust_2016}
-
-% ddG
-
-MutaBind \cite{li_mutabind_2016}.
-
-
-
-\section{Benchmarks}
-
-Rosetta benchmark \cite{o_conchuir_web_2015}
-
-Benchmark showing Rosetta doing poorly: \cite{potapov_assessing_2009}
-
-I-Mutant2, DMutant, CUPSAT, FoldX \cite{khan_performance_2010}
 
 
 

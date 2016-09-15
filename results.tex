@@ -2,41 +2,68 @@
 
 \mychapter{3}{Results} \label{chap:results}
 
+ELASPIC uses the gradient boosting of decision trees regressor (GBR). It was optimized in several ways.
+
+
+ELASPIC described in  output xxx features in total.
+1. We calculated those features for the Provean and the Skempi training sets.
+2. We removed features that were note different in any of the training cases (xxx for core mutations and yyy for interface mutations).
+
+3. It has been reported that balancing the training set by including both positive and negative samples
+
+
+As described in [], balancing the training set can significantly improve performance. However, with Provean balancing the training set can bias the result because most mutations are to unconserved amino acids (often alanine) and
+
+
+
+We built two core predictors and two interface predictors:
+
+\begin{enumerate}
+	\item No sequence features but a balanced training set.
+	\item Sequence features but no balanced training set.
+\end{enumerate}
+
 - Accuracy over different sequence identity bins
 
 - within protein correlation on the test set
 
 
-\section{Anti-proliferative peptides}
+\section{Datasets}
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.24]{image98}
-	\caption[pipeline]{The drop-off score is higher for peptides that have a higher sum of the absolute interface FoldX energy.}
-\end{figure}
-
-
-% === core ===
-
-% Training set stats
 
 \begin{table}[ht]
-\caption{Description of the dataset used to train the core predictor.} \label{tab:core_datasets}
-\begin{tabular}{l | p{13cm}}
-	\toprule
-	Dataset name & Experimental feature \\
-	\midrule
-	Protherm \cite{kumar_protherm_2006} & Change in the Gibbs free energy of protein folding ($\Delta \Delta G$). \\
-	Taipale \cite{sahni_widespread_2015} & Change in the interaction with various quality control factors (QCFs), measured using the LUMIER assay. \\
-	Humsavar \cite{consortium_uniprot:_2015} & $1$ if the mutation is annotated with at least one disease in the UniProt \textit{humsavar.txt} file. $0$ if the mutation is annotated as ``Polymorphism'' in the UniProt \textit{humsavar.txt} file. \\
-	ClinVar \cite{landrum_clinvar:_2016} & $1$ if the mutation is found in the ClinVar \textit{clinvar\_20160531.vcf} file. $0$ if the mutation is found in the ClinVar \textit{common\_no\_known\_medical\_impact\_20160531.vcf} file. \\
-	COSMIC \cite{forbes_cosmic:_2015} & $1$ if the mutation is predicted to be deleterious by FATHMM in the COSMIC database. $0$ if the mutation is predicted to be benign by FATHMM in the COSMIC database. \\
-	\bottomrule
-\end{tabular}
+	\caption[Datasets used in this study.]{Description of the datasets that were used in this study.}
+	\label{tab:datasets}
+	\begin{tabular}{l | p{9cm} | p{2cm} | p{0.5cm}}
+		\toprule
+		Name & Description & Type & Ref. \\
+		\midrule
+		\textbf{Protherm} & Database of changes in the Gibbs free energy of protein folding caused by mutations ($\Delta \Delta G$). & Train & \cite{kumar_protherm_2006} \\
+		\textbf{Skempi} & Database of changes in the Gibbs free energy of protein folding caused by mutations ($\Delta \Delta G$). & Train & \cite{moal_skempi:_2012} \\
+		\textbf{Taipale} & Chaperone interaction assay measuring protein stability. Change in the interaction with various quality control factors (QCFs), measured using the LUMIER assay. & Validation & \cite{sahni_widespread_2015} \\
+		\textbf{Taipale PPI} & Yeast two hybrid studies measuring the effect of mutations on the presence / abscence of interactions. & Validation & \cite{sahni_widespread_2015} \\
+		\textbf{Taipale GPCA} & \textit{Gaussia princeps} luciferase protein complementation assay measuring the effect of mutations on protein affinity. & Validation & \cite{sahni_widespread_2015} \\
+		\textbf{Humsavar} & Disease-causing mutations vs. polymorphisms. Mostly OMIM, old ClinVar, old COSMIC. $1$ if the mutation is annotated with at least one disease in the UniProt \textit{humsavar.txt} file. $0$ if the mutation is annotated as ``Polymorphism'' in the UniProt \textit{humsavar.txt} file. & Validation \& Test & \cite{consortium_uniprot:_2015} \\
+		\textbf{ClinVar} & Disease-causing mutations with a weaker inheritence link than OMIM. $1$ if the mutation is found in the ClinVar \textit{clinvar\_20160531.vcf} file. $0$ if the mutation is found in the ClinVar \textit{common\_no\_known\_medical\_impact\_20160531.vcf} file. & Validation \& Test & \cite{landrum_clinvar:_2016} \\
+		\textbf{COSMIC} & Mutations found in cancers. Use high-confidence FATHMM predictions. $1$ if the mutation is predicted to be deleterious by FATHMM in the COSMIC database. $0$ if the mutation is predicted to be benign by FATHMM in the COSMIC database. & Validation \& Test & \cite{forbes_cosmic:_2015} \\
+		\textbf{SUMO} & Mutations affecting the activity of SUMO ligase, measured using a cell viability assey. & Test & \cite{cagi4_sumo_ligase} \\
+		\textbf{AB-Bind} & Antibody affinity maturation experiments. & Test & \cite{sirin_ab-bind:_2016} \\
+		\textbf{Benedix} & Alanine scanning of the TEM1 ($\beta$-lactamase) -- BLIP ($\beta$-lactamase-inhibitor) complex. & Test & \cite{benedix_predicting_2009} \\
+	\end{tabular}
 \end{table}
 
 
-% Machine learning
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.65\textwidth]{static/elaspic_training_set/data_statistics/training_set_overlap_data_df_core.pdf}
+	\caption{Size and overlap between the core and interface predictor datasets.}
+\end{figure}
+
+
+
+\section{Training the core predictor}
+
+\subsection{Gridsearch and feature elimination}
 
 \begin{figure}[ht]
 	\centering
@@ -58,6 +85,56 @@
 	\caption{Core predictor training.}
 \end{figure}
 
+% Final results
+
+\begin{table}[ht]
+\caption{Core predictor parameters.} \label{tab:core_parameters}
+\begin{tabular}{l | l | l}
+	\toprule
+	Parameter label & Parameter description & Parameter value \\
+	\midrule
+	... & ... \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}[ht]
+	\caption{Core predictor features.} \label{tab:core_features}
+	\begin{tabular}{ | l | l | l | l | }
+	\hline
+		alignment\_coverage & Alignment quality & \  & \  \\ \hline
+		alignment\_identity & Alignment quality & \  & \  \\ \hline
+		alignment\_score & Alignment quality & \  & \  \\ \hline
+		backbone\_hbond\_change & FoldX & \  & \  \\ \hline
+		backbone\_hbond\_wt & FoldX & \  & \  \\ \hline
+		cis\_bond\_wt & FoldX & \  & \  \\ \hline
+		disulfide\_wt & FoldX & \  & \  \\ \hline
+		electrostatic\_kon\_change & FoldX & \  & \  \\ \hline
+		electrostatics\_change & FoldX & * & \  \\ \hline
+		entropy\_mainchain\_change & FoldX & \  & \  \\ \hline
+		helix\_dipole\_wt & FoldX & \  & \  \\ \hline
+		matrix\_score & Sequence conservation & \  & \  \\ \hline
+		pcv\_hbond\_change & Physico-chemical features & \  & \  \\ \hline
+		pcv\_hbond\_self\_change & Physico-chemical features & \  & \  \\ \hline
+		pcv\_salt\_equal\_change & Physico-chemical features & \  & \  \\ \hline
+		pcv\_salt\_equal\_self\_wt & Physico-chemical features & \  & \  \\ \hline
+		pcv\_salt\_equal\_wt & Physico-chemical features & \  & \  \\ \hline
+		pcv\_salt\_opposite\_change & Physico-chemical features & \  & \  \\ \hline
+		pcv\_vdw\_self\_change & Physico-chemical features & \  & \  \\ \hline
+		provean\_score & Sequence conservation & ** &  \\ \hline
+		sloop\_entropy\_wt & FoldX & \  & \  \\ \hline
+		solvation\_hydrophobic\_change & FoldX & * & \  \\ \hline
+		solvation\_polar\_change & FoldX & ** &  \\ \hline
+		solvent\_accessibility\_wt & FoldX & * & \  \\ \hline
+		torsional\_clash\_change & FoldX & \  & \  \\ \hline
+		van\_der\_waals\_clashes\_change & FoldX & * & \  \\ \hline
+		water\_bridge\_wt & FoldX & \  & \  \\ \hline
+	\end{tabular}
+\end{table}
+
+
+\subsection{Validation}
 
 \begin{figure}[ht]
 	% \centering
@@ -87,35 +164,9 @@
 \end{figure}
 
 
-% Final results
-
-\begin{table}[ht]
-\caption{Core features.} \label{tab:core_features}
-\begin{tabular}{l | p{13cm}}
-	\toprule
-	Feature name & Feature description \\
-	\midrule
-	... & ... \\
-	\bottomrule
-\end{tabular}
-\end{table}
 
 
-\begin{table}[ht]
-\caption{Core parameters.} \label{tab:core_parameters}
-\begin{tabular}{l | l | l}
-	\toprule
-	Parameter label & Parameter description & Parameter value \\
-	\midrule
-	... & ... \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-
-% === interface ===
-
-% Training set stats
+\section{Training the interface predictor}
 
 \begin{figure}[ht]
 	\centering
@@ -123,23 +174,8 @@
 	\caption{Size and overlap between the core and interface predictor datasets.}
 \end{figure}
 
-\begin{table}[ht]
-\caption{Description of the dataset used to train the interface predictor.} \label{tab:interface_datasets}
-\begin{tabular}{l | p{13cm}}
-	\toprule
-	Dataset name & Experimental feature \\
-	\midrule
-	Skempi \cite{kumar_protherm_2006} & Change in the Gibbs free energy of protein folding ($\Delta \Delta G$). \\
-	Taipale \cite{sahni_widespread_2015} & Change in the interaction with various quality control factors (QCFs), measured using the LUMIER assay. \\
-	Humsavar \cite{consortium_uniprot:_2015} & $1$ if the mutation is annotated with at least one disease in the UniProt \textit{humsavar.txt} file. $0$ if the mutation is annotated as ``Polymorphism'' in the UniProt \textit{humsavar.txt} file. \\
-	ClinVar \cite{landrum_clinvar:_2016} & $1$ if the mutation is found in the ClinVar \textit{clinvar\_20160531.vcf} file. $0$ if the mutation is found in the ClinVar \textit{common\_no\_known\_medical\_impact\_20160531.vcf} file. \\
-	COSMIC \cite{forbes_cosmic:_2015} & $1$ if the mutation is predicted to be deleterious by FATHMM in the COSMIC database. $0$ if the mutation is predicted to be benign by FATHMM in the COSMIC database. \\
-	\bottomrule
-\end{tabular}
-\end{table}
 
-
-% Machine learning
+\subsection{Gridsearch and feature elimination}
 
 \begin{figure}[ht]
 	\centering
@@ -161,6 +197,59 @@
 	\caption{Interface predictor training.}
 \end{figure}
 
+
+% Final results
+
+\begin{table}[ht]
+\caption{Interface predictor parameters.} \label{tab:interface_parameters}
+\begin{tabular}{l | l | l}
+	\toprule
+	Parameter label & Parameter description & Parameter value \\
+	\midrule
+	... & ... \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}[ht]
+\caption{Interface predictor features.} \label{tab:interface_features}
+	\begin{tabular}{ | l | l | l | }
+	Feature name & Feature description & ... \\
+	\hline
+		alignment\_score & Alignment quality & \  \\ \hline
+		backbone\_clash\_change & FoldX & \  \\ \hline
+		backbone\_clash\_wt & FoldX & \  \\ \hline
+		backbone\_hbond\_change & FoldX & \  \\ \hline
+		cis\_bond\_wt & FoldX & \  \\ \hline
+		electrostatic\_kon\_wt & FoldX & \  \\ \hline
+		energy\_ionisation\_wt & FoldX & \  \\ \hline
+		entropy\_complex\_change & FoldX & \  \\ \hline
+		entropy\_sidechain\_change & FoldX & * \\ \hline
+		intraclashes\_energy\_2\_change & FoldX & \  \\ \hline
+		partial\_covalent\_bonds\_wt & FoldX & * \\ \hline
+		pcv\_hbond\_self\_change & Physico-chemical features & \  \\ \hline
+		pcv\_hbond\_wt & Physico-chemical features & \  \\ \hline
+		pcv\_salt\_equal\_self\_change & Physico-chemical features & \  \\ \hline
+		pcv\_salt\_equal\_wt & Physico-chemical features & \  \\ \hline
+		pcv\_salt\_opposite\_change & Physico-chemical features & \  \\ \hline
+		pcv\_salt\_opposite\_self\_change & Physico-chemical features & \  \\ \hline
+		pcv\_salt\_opposite\_self\_wt & Physico-chemical features & \  \\ \hline
+		pcv\_vdw\_self\_change & Physico-chemical features & \  \\ \hline
+		pcv\_vdw\_self\_wt & Physico-chemical features & * \\ \hline
+		pcv\_vdw\_wt & Physico-chemical features & * \\ \hline
+		provean\_score & Sequence conservation & * \\ \hline
+		sloop\_entropy\_change & FoldX & \  \\ \hline
+		solvation\_hydrophobic\_change & FoldX & \  \\ \hline
+		solvation\_polar\_change & FoldX & * \\ \hline
+		solvation\_polar\_wt & FoldX & \  \\ \hline
+		torsional\_clash\_change & FoldX & \  \\ \hline
+		water\_bridge\_change & FoldX & \  \\ \hline
+	\end{tabular}
+\end{table}
+
+
+\subsection{Validation}
 
 \begin{figure}[ht]
 	% \centering
@@ -188,29 +277,3 @@
 
 	\caption{Performance of the interface predictor on the training (a), validation (b) and test sets (c).}
 \end{figure}
-
-
-% Final results
-
-\begin{table}[ht]
-\caption{Interface features.} \label{tab:interface_features}
-\begin{tabular}{l | p{13cm}}
-	\toprule
-	Feature name & Feature description \\
-	\midrule
-	... & ... \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-
-\begin{table}[ht]
-\caption{Interface parameters.} \label{tab:interface_parameters}
-\begin{tabular}{l | l | l}
-	\toprule
-	Parameter label & Parameter description & Parameter value \\
-	\midrule
-	... & ... \\
-	\bottomrule
-\end{tabular}
-\end{table}

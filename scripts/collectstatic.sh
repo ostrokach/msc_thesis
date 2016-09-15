@@ -22,7 +22,7 @@ copy_datapkg_figures () {
 }
 
 
-rsync -av --include '*/' --include '*.pdf' --exclude '*' ./figures/ ./static/
+rsync -av --include '*/' --include '*.pdf' --include '*.png' --exclude '*' ./figures/ ./static/
 
 
 copy_datapkg_figures elaspic_training_set data_statistics \
@@ -36,3 +36,13 @@ copy_datapkg_figures elaspic_training_set validation \
     crossvalidation_performance_core crossvalidation_performance_interface \
     validation_performance_core validation_performance_interface \
     test_performance_core test_performance_interface
+
+copy_datapkg_figures elaspic_training_set elaspic_statistics \
+    protein_statistics \
+    domain_statistics \
+    missing_template \
+    missing_provean \
+    missing_model_protein \
+    missing_model_domain \
+    structural_coverage_hist \
+    missing_model_protein_pair_novarsplice
