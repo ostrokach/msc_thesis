@@ -4,7 +4,6 @@
 
 ELASPIC uses the gradient boosting of decision trees regressor (GBR). It was optimized in several ways.
 
-
 ELASPIC described in  output xxx features in total.
 1. We calculated those features for the Provean and the Skempi training sets.
 2. We removed features that were note different in any of the training cases (xxx for core mutations and yyy for interface mutations).
@@ -56,12 +55,19 @@ We built two core predictors and two interface predictors:
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.65\textwidth]{static/elaspic_training_set/data_statistics/training_set_overlap_data_df_core.pdf}
-	\caption{Size and overlap between the core and interface predictor datasets.}
+	\caption[Size and overlap of core and interface datasets.]{Size and overlap of core and interface datasets.}
 \end{figure}
 
 
 
-\section{Training the core predictor}
+\section{Predicting mutation induced $\Delta \Delta G$ of protein folding.}
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.65\textwidth]{static/elaspic_training_set/data_statistics/training_set_overlap_data_df_core.pdf}
+	\caption[Core predictor datasets.]{Size and overlap of core and interface datasets.}
+\end{figure}
+
 
 \subsection{Gridsearch and feature elimination}
 
@@ -82,7 +88,7 @@ We built two core predictors and two interface predictors:
 		\label{fig:feature_elimination_core}
 	\end{subfigure}
 
-	\caption{Core predictor training.}
+	\caption[Core predictor training.]{Training the core predictor.}
 \end{figure}
 
 % Final results
@@ -160,18 +166,18 @@ We built two core predictors and two interface predictors:
 		% \vspace*{10mm}
 	\end{subfigure}
 
-	\caption{Performance of the core predictor on the training (a), validation (b) and test sets (c).}
+	\caption[Core predictor validation.]{Performance of the core predictor on the training (a), validation (b) and test sets (c).}
 \end{figure}
 
 
 
 
-\section{Training the interface predictor}
+\section{Predicting mutation induced $\Delta \Delta G$ of protein-protein interactions.}
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.65\textwidth]{static/elaspic_training_set/data_statistics/training_set_overlap_data_df_interface.pdf}
-	\caption{Size and overlap between the core and interface predictor datasets.}
+	\caption[Interface predictor datasets.]{Size and overlap between the core and interface predictor datasets.}
 \end{figure}
 
 
@@ -194,7 +200,7 @@ We built two core predictors and two interface predictors:
 		\label{fig:feature_elimination_interface}
 	\end{subfigure}
 
-	\caption{Interface predictor training.}
+	\caption[Interface predictor training.]{Training the interface predictor.}
 \end{figure}
 
 
@@ -275,5 +281,5 @@ We built two core predictors and two interface predictors:
 		% \vspace*{10mm}
 	\end{subfigure}
 
-	\caption{Performance of the interface predictor on the training (a), validation (b) and test sets (c).}
+	\caption[Interface predictor validation.]{Performance of the interface predictor on the training (a), validation (b) and test sets (c).}
 \end{figure}
