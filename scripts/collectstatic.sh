@@ -26,7 +26,7 @@ rsync -av --include '*/' --include '*.pdf' --include '*.png' --exclude '*' ./fig
 
 
 copy_datapkg_figures elaspic_training_set data_statistics \
-    training_set_overlap_data_df_core training_set_overlap_data_df_interface
+    training_set_overlap_data_df_tt_core training_set_overlap_data_df_tt_interface
 
 copy_datapkg_figures elaspic_training_set machine_learning \
     gridsearch_core gridsearch_interface \

@@ -1,6 +1,6 @@
 % !TEX root = msc_thesis.tex
 
-\mychapter{2}{Implementation} \label{chap:implementation}
+\chapter{Implementation} \label{chap:implementation}
 
 
 \section{Profs}
@@ -59,11 +59,17 @@ The result of this analysis shows that, at least for human proteins, Profs achie
 
 \subsection{Domain interactions}
 
-We also created a table of domain-domain interactions for proteins that are known to interact and for which a homology model of the interaction can be created. We started by creating a comprehensive list of protein-protein interactions (PPIs), by taking the union of all PPIs listed in the HIPPIE database \cite{schaefer_hippie:_2012} and in the datasets hosted by the Harvard Center for Cancer Systems Biology (CCSB) \cite{rolland_proteome-scale_2014}. The overlap in the PPIs obtained from each source is presented in Figure \ref{fig:ppi_database_overlap}. We filtered those PPIs to select pairs of proteins where each protein has at least one domain with a structural template. This information is stored in the \textbf{uniprot\_domain\_pair} table. For each of those domains, we perform a Blast search of the domain sequence against a library of Profs domains in the PDB (the \textbf{domain} table in Figure \ref{fig:elaspic_database_schema}), and we selected only those templates that occur in the same crystal structure in both proteins and that interact according to the \textbf{domain\_contact} table. In order to select the best template for the interaction, we calculate a quality score for each of the two domains using Equation \ref{eq:alignment_score}, and chose the template with the highest geometric mean of the two scores.
+We also created a table of domain-domain interactions for proteins that are known to interact and for which a homology model of the interaction can be created. We started by creating a comprehensive list of protein-protein interactions (PPIs), by taking the union of all PPIs listed in the HIPPIE database \cite{schaefer_hippie:_2012} and in the datasets hosted by the Harvard Center for Cancer Systems Biology (CCSB) \cite{rolland_proteome-scale_2014}. The overlap in the PPIs obtained from each source is presented in Figure \ref{fig:ppi_database_overlap}. We filtered those PPIs to select pairs of proteins where each protein has at least one domain with a structural template. This information is stored in the \textbf{uniprot\_domain\_pair} table. For each of those domains, we perform a Blast search of the domain sequence against a library of Profs domains in the PDB (the \textbf{domain} table in Figure \ref{fig:elaspic_database_schema}), and we selected only those templates that occur in the same crystal structure in both proteins and that interact according to the \textbf{domain\_contact} table. In order to select the best template for the interaction, we calculate a quality score for each of the two domains using Equation \ref{eq:core_alignment_score}, and chose the template with the highest geometric mean of the two scores.
 
-\begin{equation} \label{eq:alignment_score}
+\begin{equation} \label{eq:core_alignment_score}
 	Score = 0.95 \cdot seq\_identity \cdot coverage + 0.05 \cdot coverage
 \end{equation}
+
+\begin{equation} \label{eq:interface_alignment_score}
+	Score = \sqrt{score\_chain\_1 \cdot score\_chain\_2}
+\end{equation}
+
+
 
 \begin{figure}[!tb]
 	\centering
@@ -153,24 +159,26 @@ In the ELASPIC database (Figure \ref{fig:elaspic_database_schema}), Profs domain
 
 \subsection{ELASPIC microservice}
 
-One of our aims was to make ELASPIC accessible to the general scientific community. Daniel Witvliet took up the task of developing a webserver that would allow users to submit mutations and analyze results interactively.
-
-In order to make the webserver scale to thousands of mutations, we opted to run ELASPIC jobs on a local Sun Grid Engine (SGE) cluster. However, this introduced several unique objectives and challenges to the design:
+Daniel Witvliet took up the job of developing the ELASPIC webserver, which would make ELASPIC accessible to the general scientific community and would allow users interactively to analyze ELASPIC results. In order to make the webserver scale to thousands of mutations, we opted to run ELASPIC jobs on a local Sun Grid Engine (SGE) cluster. However, this introduced several unique design challenges:
 
 \begin{enumerate}
 
-	\item If users submitted multiple mutations affecting the same protein, we had to make sure that the Provean supporting sets and homology models for the protein are calculated before the mutation jobs are submitted to the cluster. Otherwise, each mutation would initiate the calculation of a Provean supporting set (which can require > 5 GB of memory) and a homology model (which can require > 10 minutes of CPU time), which lead to many un-neccesasry jobs, would drastically lower our throughput, and could lead to inconsistent results, since the supporting sets and homology models would not necessarily be the same even if they are of the same protein domain. A person submitting multiple mutations for the same job would not be unexpected; someone may decide do perform alanine scanning of an interface, etc. This requires the existence of a process which would monitor jobs and submit mutations only when Provean and MODELLER jobs have finished.
+	\item If users submit multiple mutations affecting the same protein, we had to make sure that the Provean supporting sets and homology models for the protein are calculated before the mutation jobs are submitted to the cluster. Otherwise, each mutation would initiate the calculation of a Provean supporting set (which can require > 5 GB of memory) and a homology model (which can require > 30 minutes of CPU time). This would lead to many unnecessary jobs, drastically lowering our throughput, and could lead to inconsistent results, since different jobs can generate different supporting sets and homology models, even for the same protein, due to the inherent randomness in those tasks.
 
-	\item We have to keep track of all running mutations in order to be able to send a ``Job complete'' email when all mutations for a particular job have been calculated.
+	\item In order to send a ``Job Complete'' email once the mutations submitted by a particular user had finished, we had to keep track of the status of all mutations running on the cluster.
 
-	\item SGE jobs can die unexpectedly if they exceed allocated resources or if the node goes down. In most cases, the jobs do not have an opportunity to send an error message. Therefore, we could not assume that a job is finished successfully if it is no longer running on the cluster and if it has no error messages in the log files. The job may simply have been killed before it had a chance to print an ERROR message.
+	\item Jobs running on a SGE cluster can die unexpectedly if they exceed allocated resources or if the node on which they are running fails. In most cases, the jobs do not get an opportunity to send an error message before they are killed. Therefore, we could not assume that a job finished successfully if it is no longer running on the cluster and if it has no error messages in the log files. The job may simply have been killed before it had a chance to print an ERROR message.
 
 \end{enumerate}
 
-One possible way to address this problems would be to use an asyncronous task queue, such as Celery. However, Celery workers do not share the same memory state, and therefore each worker would have to execute its own \textit{qstat} calls on the SGE master, quickly overloading it with connections and requests. It would not be possible to monitor all mutations for a particular job. The ``job finished'' commands could only be submitted as a cron job by querying the database and looking for finished and / or failed jobs.
+One possible way to address this problems would be to use an asyncronous task queue, such as Celery. However, Celery tasks do not share the same memory state, and therefore each worker would have to execute its own \textit{qstat} calls on the SGE master, quickly overloading it with connections and requests. Furthermore,  would not be possible to monitor all mutations for a particular job. The ``job finished'' commands could only be submitted as a cron job by querying the database and looking for finished and / or failed jobs.
 
 and we ultimately opted to have a custom asynchronous task queue that was tailored to ELASPIC and would execute and monitor ELASPIC jobs on a local Sun Grid Engine (SGE) cluster rather than inside the same virtual machine as the webserver.
 
+A person submitting multiple mutations for the same job would not be unexpected; someone may decide do perform alanine scanning of an interface, etc. This requires the existence of a process which would monitor jobs and submit mutations only when Provean and MODELLER jobs have finished.
+
+Since most of the Celery tasks would be IO bound,we could use eventlet or gevent execution pool, which allows for high concurrency by using a large number of ``green threads''.
+managing the shared state between threads
 Would require dedicating significant computational resources solely to ELASPIC, // the server would not scale with the fluctuations indemand.
 
 
