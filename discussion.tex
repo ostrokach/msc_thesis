@@ -1,26 +1,42 @@
 % !TEX root = msc_thesis.tex
 
-\chapter{Discussions} \label{chap:discussion}
-
-We saw mixed results with the
+\chapter{Discussion} \label{chap:discussion}
 
 
-\section{Published post factum}
 
-% Deleteriousness
+In the set of features selected through feature elimination, there are both sequence-based features and structure-based features. The most important sequence-based feature is the Provean score
 
-VIPUR \cite{baugh_robust_2016}
+Out of the remaining featues,
+Results of feature elimination support the view that electrostatics, Van der Waals forces and entropy are the main forces determining the effect of mutations, as proposed by Benedix \textit{et al.} in the Concoord/Poisson-Boltzmann surface area model (Equation \ref{eq:benedix_et_al}).
 
-% ddG
+Out of the features that remain after feature elimination.
 
-MutaBind \cite{li_mutabind_2016}.
+\begin{equation} \label{eq:benedix_et_al}
+    \Delta G_{CC/PBSA} = \Delta G_{electrostatic} + \Delta G_{van\ der\ Waals} + \Delta G_{entropy}
+\end{equation}
+
+``By weighting the individual averaged energy contributions (sepa-
+rately for folding free energies and protein-protein binding affinities)
+water contributions are implicitly taken into account.''
 
 
-\section{Limitations}
+- Use covariation between amino acids in addition to the conservation score to predict the impact of mutations, as described by Kowarsch et. al. \cite{kowarsch_correlated_2010}.
+
+- Standard conservation metrics, such as Provean, may predict a certain substitution to be benign because it occurs in other organisms. However, this does not take into account any potentially covarying mutations that mask the deleterious effect of the mutation in question.
+
+
+% Replace FoldX with MODELLER
+
+- Use multiple templates when building the homology models.
+- Create multiple models and choose the one with the highest DOPE score.
+- Refine the model using molecular dynamics, although it has been reported that long-term MD is not useful for optimizing structures in most cases \cite{raval_refinement_2012}.
+
+
+
 
 Cystic fibrosis
 
-  - Existing approaches remain limited in their ability to predict disease-causing variants. In a study of 1571 mutations of the CFTR gene causing cystic fibrosis, (SIFT, PolyPhen, PANTHER) \cite{dorfman_common_2010}
+
 
 Long QT syndrome
 
@@ -29,133 +45,20 @@ Long QT syndrome
   - \url{http://www.ncbi.nlm.nih.gov/pubmed/25967940}
 
 
+% === Published post factum ===
+
+Since the publication of the ELASPIC pipeline \cite{berliner_combining_2014} and webserver \cite{witvliet_elaspic_2016}, several other algorithms have been published which use a similar approach as ELASPIC to either predict mutation deleteriousness \cite{baugh_robust_2016} or the $\Delta \Delta G$.
+
+
+
+
+VIPUR \cite{baugh_robust_2016}
+
+% ddG
+
+MutaBind \cite{li_mutabind_2016}.
+
+
+
+
 \section{Protein science}
-
-Results of feature elimination support the view that electrostatics, van der waals forces and entropy are the main forces determining the effect of mutations, as suggested by
-
-
-\section{Future directions}
-
-% Improve domain definitions and alignments
-
-eSCOP
-
-Gene3D
-
-- Use sequence profiles (e.g. Pfam or Gene3D) to guide the alignment.
-
-
-\section{Better features}
-
-Most structural features play a surprisingly small role in the performance of the ELASPIC predictor. Either those features are not informative, or our training set is too noisy for the contribution of those features to come through.
-
-
-% Better features
-
-- Use covariation between amino acids in addition tho the conservation score to predict the impact of mutations, as described by Kowarsch et. al. \cite{kowarsch_correlated_2010}. \\
-- Standard conservation metrics, such as Provean, may predict a certain substitution to be benign because it occurs in other organisms. However, this does not take into account any potentially covarying mutations that mask the deleterious effect of the mutation in question.
-
-
-% Replace FoldX with MODELLER
-
-- Use multiple templates when building the homology models. \\
-- Create multiple models and choose the one with the highest DOPE score. \\
-- Refine the model using molecular dynamics. \\
-
-Long-term MD is not useful for optimizing structures in most cases \cite{raval_refinement_2012}.
-
-\subsection{Multitask learning}
-
-Construct a shared representation for related problems in order to
-
-In this work, we attempted to improve the performance of ELASPIC by keeping track of its performance on mutation deleteriousness datasets throughout cross-validation and feature selection. While this approach should prevent us from selecting a predictor which is over-fitted on the training dataset, it does not improve the pool of predictors from which we make this selection.
-
-One way in which we could use information from the mutation deleteriousness datasets directly in the ELASPIC predictor is by training a boosted decision tree model to predict the mutation deleteriousness score, and using the output of the trained model as input to logistic regression which is trained to predict the $\Delta \Delta G$ of mutations. A similar approach was used successfully by a group at Facebook to predict clicks on adds \cite{he_practical_2014}. This approach would have an additional advantage, in that since we use a linear model to predict the final $\Delta \Delta G$, it should be able to extrapolate outside the values present in our training set.
-
-An additional advantage is that the feature learning part of the predictor would be done on a much larger dataset, allowing the sequential and structural features to ``mix'' in a more general environment.
-
-``The resulting transformer has then learned a supervised, sparse, high-dimensional categorical embedding of the data.''
-
-% \url{http://scikit-learn.org/stable/auto_examples/ensemble/plot_feature_transformation.html\#example-ensemble-plot-feature-transformation-py}
-
-
-
-\section{Multi-residue mutations}
-
-ELASPIC can easily be extended to calculate the $\Delta \Delta G$ for mutations involving multiple amino acids. The tricky part is that the number of features changes with the number of amino acids that are mutated. We could address this by treating a mutation affecting multiple amino acids as a set of single amino acid mutations. For example, we could use the following recursive strategy:
-
-\begin{enumerate}
-    \item Introdue each of the single amino acid mutations, one at a time.
-    \item Select the single amino acid mutation with the most stabilizing effect.
-    \item Repeat for the remaining mutations, using the structure containing the mutation selected in Step 2.
-\end{enumerate}
-
-About one third on mutations in the Protherm and Skempi databases affect multiple amino acids. We could include those mutations in the training set by dividing them into single amino acid mutations and assigning to them a $\Delta \Delta G$ proportional to their contribution to the overall mutation score, as determined by the multiple amino acid substitution version of ELASPIC. This would require ``bootstrapping'' the ELASPIC predictor using single amin acid mutations, using the ``bootstrapped'' predictor to approximate the contribution of single amino acid mutaitons to the $\Delta \Delta G$ affecting mulitple amino acids, adding those mutations to the training set, and repeating.
-
-In the case of the ELASPIC core predictor, we could create a dataset of multiple amino acid polymorphisms (MAAMs) from a thermophilic bacterium and it's closest non-thermophilic relative (maybe such a database already exists?). Cross-validate ELASPIC making sure that we predict those MAAMs to be stabilizing. Incorporate those MAAMs into our training set, weighting them accordingly.
-
-In the case of the ELASPIC interface predictor, we could construct a dataset from phage-display read counts, and cross-validate ELASPIC while keeping track of its performance on phage display counts. Could then recursively incorporate the phage display data into the training set, weighting it by how well the ELASPIC predictor does on those mutations, as determined through cross-validation.
-
-It is likely that the performance of the ELASPIC predictor would be lower for mutations affecting multiple amino acids than for mutations affecting a single amino acids, as the former is more likely to induce changes in the conformation of the protein that are not modelled by ELASPIC. This drop in performance could in-part be ameliorated by including a backbone relaxation step between each mutation, using molecular dynamics \cite{abraham_gromacs:_2015}, Rosetta Backrub \cite{smith_predicting_2011}, or other algorithms \cite{sun_protein_2016}.
-
-If the ELASPIC predictor can achieve reasonable results for mutations affecting multiple amino acids, it could be used ``in reverse'' to design protein domains with increased stability and protein interfaces with increased affinity.
-
-FireProt: Energy- and Evolution-Based Computational Design of Thermostable Multiple-Point Mutants
-
-  - \url{http://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1004556}
-
-  - Predict the structural effect of multiple mutations.
-
-  - ``Stability effects of all possible single-point mutations were estimated using the <BuildModel> module of FoldX''.
-
-  - We demonstrate that thermostability of the model enzymes haloalkane dehalogenase DhaA and γ-hexachlorocyclohexane dehydrochlorinase LinA can be substantially increased.
-
-  - \cite{bednar_fireprot:_2015}
-
-
-
-HOPE THAT PROVEAN WOULD AT LEAST PARTIALLY MAKE UP FOR THE LIMITING ASSUMPTION THAT THE BACKBONE REMAINS STABLE BETWEEN MUTATIONS.
-
-SCIENTIFICALLY INTERESTING TO SEE WHAT EFFECT MD RELAXATIONS WOULD HAVE ON THE PERFORMANCE OF THE ALGORITHM.
-
-
-
-\section{Additional interaction types}
-
-\subsection{Protein-protein interactions}
-
-Predict PPIs: PRISM: Protein interaction by structure matching.
-
-
-\subsection{Protein-ligand interactions}
-
-- drugging protein-protein interfaces \cite{wells_reaching_2007}
-
-Platinum: Protein-ligand affinity change upon mutation database.
-
-- \url{http://bleoberis.bioc.cam.ac.uk/platinum/}
-
-BioLiP is a semi-manually curated database for high-quality, biologically relevant ligand-protein binding interactions.
-
-- \url{http://zhanglab.ccmb.med.umich.edu/BioLiP/}
-
-- The structure data are collected primarily from the Protein Data Bank, with biological insights mined from literature and other specific databases.
-
-
-\subsection{Protein-DNA/RNA interactions}
-
-ProNIT
-
-RBPDB: a database of RNA-binding specificities
-
-\url{http://rbpdb.ccbr.utoronto.ca}
-
-Paper: \url{http://nar.oxfordjournals.org/content/39/suppl_1/D301}
-
-
-\subsection{Protein-peptide interactions}
-
-ELM
-
-
-\subsection{Phosphorylated residue-mediated interactions}

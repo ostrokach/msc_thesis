@@ -28,7 +28,7 @@ We started with Pfam domain definitions for all known protein sequences, which w
 The results of this analysis are stored in the \textbf{uniprot\_domain} and the \textbf{uniprot\_domain\_template} tables in the ELASPIC database (Figure \ref{fig:elaspic_database_schema}). The \textbf{uniprot\_domain} table contains all Pfam domains and supradomains that were obtained after removing repeating and overlapping domains, as outlined above. The \textit{pdbfam\_name} column contains the name of the Profs domain. The \textit{alignment\_def} column contains either the original Pfam domain definitions or, in the case of supradomains, the merged domain definitions of multiple Pfam domains. The \textbf{uniprot\_domain\_template} table contains information describing the alignment of the Pfam domain or supradomain with the corresponding Profs structural template, for domains for which a suitable Profs template could be found. The \textit{cath\_id} column identifies the Profs structural template that was selected, and the \textit{domain\_def} column contains the corrected and expanded domain definitions.
 
 
-\subsection{Comparing Profs with Pfam and Gene3D}
+\subsection{Comparison with Pfam and Gene3D}
 
 In order to ascertain the validity of Profs domain definitions, we compared Profs, Pfam and Gene3D in terms of sequence coverage (Figure \ref{fig:profs_coverage}) and domain size (Figure \ref{fig:profs_domain_size}).
 
@@ -57,18 +57,18 @@ The result of this analysis shows that, at least for human proteins, Profs achie
 \end{figure}
 
 
+
 \subsection{Domain interactions}
 
 We also created a table of domain-domain interactions for proteins that are known to interact and for which a homology model of the interaction can be created. We started by creating a comprehensive list of protein-protein interactions (PPIs), by taking the union of all PPIs listed in the HIPPIE database \cite{schaefer_hippie:_2012} and in the datasets hosted by the Harvard Center for Cancer Systems Biology (CCSB) \cite{rolland_proteome-scale_2014}. The overlap in the PPIs obtained from each source is presented in Figure \ref{fig:ppi_database_overlap}. We filtered those PPIs to select pairs of proteins where each protein has at least one domain with a structural template. This information is stored in the \textbf{uniprot\_domain\_pair} table. For each of those domains, we perform a Blast search of the domain sequence against a library of Profs domains in the PDB (the \textbf{domain} table in Figure \ref{fig:elaspic_database_schema}), and we selected only those templates that occur in the same crystal structure in both proteins and that interact according to the \textbf{domain\_contact} table. In order to select the best template for the interaction, we calculate a quality score for each of the two domains using Equation \ref{eq:core_alignment_score}, and chose the template with the highest geometric mean of the two scores.
 
 \begin{equation} \label{eq:core_alignment_score}
-	Score = 0.95 \cdot seq\_identity \cdot coverage + 0.05 \cdot coverage
+	alignment\_score = 0.95 \cdot seq\_identity \cdot coverage + 0.05 \cdot coverage
 \end{equation}
 
 \begin{equation} \label{eq:interface_alignment_score}
-	Score = \sqrt{score\_chain\_1 \cdot score\_chain\_2}
+	combined\_alignment\_score = \sqrt{alignment\_score\_1 \cdot alignment\_score\_2}
 \end{equation}
-
 
 
 \begin{figure}[!tb]
@@ -116,13 +116,9 @@ At each step in the pipeline, a local database is queried to see if the required
 
 Provean supporting sets, homology models and mutation $\Delta \Delta G$ scores are available from the ELASPIC downloads page: \url{http://elaspic.kimlab.org/static/download/}. The source code of the python package implementing the ELASPIC pipeline is available from \url{https://github.com/kimlaborg/elaspic}, and the documentation for the ELASPIC pipeline can be accessed online at \url{http://elaspic.readthedocs.org/}.
 
-
-\subsection{Database schema}
-
 An overview of the ELASPIC database schema is presented in Figure \ref{fig:elaspic_database_schema}, and a description of each database table is provided in Table \ref{tab:elaspic_database_schema}.
 
-
-In the ELASPIC database (Figure \ref{fig:elaspic_database_schema}), Profs domain definitions produced by Andres' pipleine are contained in the \textbf{domain} and \textbf{domain\_contact} tables, while Profs domain definitions for uniprot are contained in the \textbf{uniprot\_domain}, \textbf{uniprot\_domain\_template}, \textbf{uniprot\_domain\_pair}, and \textbf{uniprot\_domain\_pair\_template} tables.
+In the ELASPIC database (Figure \ref{fig:elaspic_database_schema}), Profs domain definitions produced by Andres' pipleine are contained in the \textbf{domain} and \textbf{domain\_contact} tables, while Profs domain definitions for uniprot are contained in the \textbf{uniprot\_domain}, \textbf{uniprot\_domain\_template}, \textbf{uniprot\_domain\_pair}, and \textbf{uniprot\_\\domain\_pair\_template} tables.
 
 
 \begin{figure}[!tb]
@@ -141,67 +137,90 @@ In the ELASPIC database (Figure \ref{fig:elaspic_database_schema}), Profs domain
 	\midrule
 	\textbf{domain} & Contains Profs domain definitions for all proteins in the PDB. \\
 	\textbf{domain\_contact} & Contains information about interactions between Profs domains in the PDB. Only interactions that are predicted to be real by NOXclass \cite{zhu_noxclass:_2006} are included in this table. \\
-	\textbf{uniprot\_sequence} & Contains protein sequences for all proteins that are annotated with Profs domains in the \textbf{uniprot\_domain} table. This table is constructed by downloading and parsing \textit{uniprot\_sprot\_fasta.gz}, \textit{uniprot\_trembl\_fasta.gz}, and \textit{homo\_sapiens\_variation.txt} files from the Uniprot. \\
+	\textbf{uniprot\_sequence} & Contains protein sequences for all proteins that are annotated with Profs domains in the \textbf{uniprot\_domain} table. This table is constructed by downloading and parsing \textit{uniprot\_sprot\_fasta.gz}, \textit{uniprot\_trembl\_fasta.gz} and \textit{homo\_sapiens\_variation.txt} files from the Uniprot. \\
 	\textbf{provean} & Contains information about Provean \cite{choi_predicting_2012} supporting set files. The construction of a supporting set is the longest part of running Provean. Thus, in order to speed up the evaluation of mutations, the supporting set is precalculated and stored for every protein. \\
 	\textbf{uniprot\_domain} & Contains Profs domain definitions for proteins in the \textbf{uniprot\_sequence} table. This table is obtained by downloading Pfam domain definitions for all known proteins from SIMAP \cite{rattei_simapcomprehensive_2010}, and mapping those proteins to Uniprot using the MD5 hash of each sequence. Overlapping and repeating domains are either merged or deleted, as described in \cite{witvliet_elaspic_2016}. \\
 	\textbf{uniprot\_domain\_template} & Contains structural templates for domains in the \textbf{uniprot\_domain} table. The \textit{domain\_def} column contains expanded and corrected domain definitions for every domain. \\
-	\textbf{uniprot\_domain\_model} & Contains information about the homology models which were created using structural templates in the \textbf{uniprot\_domain\_template} table. \\
-	\textbf{uniprot\_domain\_mutation} & Contains information about the structural impact of core mutations, calculated by introducing those mutations into homology models listed in the \textbf{uniprot\_domain\_model} table. The \textit{ddg} column contains the predicted change in the Gibbs free energy of binding. \\
-	\textbf{uniprot\_domain\_pair} & Contains pairs of domains that are likely to mediate the interaction between known interacting partners, obtained from Hippie \cite{schaefer_hippie:_2012} and Rolland et al. \cite{rolland_proteome-scale_2014}. \\
+	\textbf{uniprot\_domain\_model} & Contains information about the homology models that were created using structural templates in the \textbf{uniprot\_domain\_template} table. \\
+	\textbf{uniprot\_domain\_mutation} & Contains information about the structural impact of core mutations, calculated by introducing those mutations into homology models listed in the \textbf{uniprot\_domain\_model} table. The \textit{ddg} column contains the predicted change in the Gibbs free energy of protein folding. \\
+	\textbf{uniprot\_domain\_pair} & Contains pairs of domains that are likely to mediate the interaction between pairs of proteins listed in Hippie \cite{schaefer_hippie:_2012} and Rolland \textit{et al.} \cite{rolland_proteome-scale_2014}. \\
 	\textbf{uniprot\_domain\_pair\_template} & Contains structural templates for domain pairs in the \textbf{uniprot\_domain\_pair} table. \\
-	\textbf{uniprot\_domain\_pair\_model} & Contains information about homology models which were created using structural templates in the \textbf{uniprot\_domain\_pair} table. \\
-	\textbf{uniprot\_domain\_pair} & Contains information about the structural impact of interface mutations, calculated by introducing those mutations into homology models listed in the \textbf{uniprot\_domain\_pair\_model} table. The \textit{ddg} column contains the predicted change in the Gibbs free energy of binding. \\
+	\textbf{uniprot\_domain\_pair\_model} & Contains information about homology models that were created using structural templates in the \textbf{uniprot\_domain\_pair} table. \\
+	\textbf{uniprot\_domain\_pair} & Contains information about the structural impact of interface mutations, calculated by introducing those mutations into homology models listed in the \textbf{uniprot\_domain\_pair\_model} table. The \textit{ddg} column contains the predicted change in the Gibbs free energy of protein-protein binding. \\
 	\bottomrule
 \end{tabular}
 \end{table}
 
 
+\clearpage
+\subsection{Jobsubmitter}
 
-\subsection{ELASPIC microservice}
+In order to make ELASPIC accessible to a wider scientific audience, Daniel Witvliet created the ELASPIC webserver, which allows users to run ELASPIC for their protein and mutation of interest and to analyze interactively ELASPIC results \cite{witvliet_elaspic_2016}.
 
-Daniel Witvliet took up the job of developing the ELASPIC webserver, which would make ELASPIC accessible to the general scientific community and would allow users interactively to analyze ELASPIC results. In order to make the webserver scale to thousands of mutations, we opted to run ELASPIC jobs on a local Sun Grid Engine (SGE) cluster. However, this introduced several unique design challenges:
+One limitation of the webserver was that it spawned ELASPIC jobs on the same virtual machine as the webserver. This meant that only a few mutations could be analyzed at a time, and that the webserver could stall when running mutations in a protein lacking a precalculated Provean supporting set, since constructing a Provean supporting set could require more RAM than the virtual machine had available. In order to make the webserver scale to thousands of mutations, we attempted to restructure it to run ELASPIC jobs on the lab Sun Grid Engine (SGE) cluster. However, this design introduced several challenges.
 
-\begin{enumerate}
+First, since users can run multiple mutations affecting the same protein, we had to make sure that the Provean supporting sets and homology models are calculated first, before jobs for individual mutations are submitted to the cluster. Otherwise, each mutation would initiate the calculation of a Provean supporting set, which can require more than 5 GB of memory, and a homology model, which can take more than 30 minutes to complete. This would lead to many unnecessary jobs, drastically lowering our throughput, and could lead to inconsistent results, since different jobs can generate different supporting sets and homology models, even for the same protein, due to the inherent randomness of those tasks.
 
-	\item If users submit multiple mutations affecting the same protein, we had to make sure that the Provean supporting sets and homology models for the protein are calculated before the mutation jobs are submitted to the cluster. Otherwise, each mutation would initiate the calculation of a Provean supporting set (which can require > 5 GB of memory) and a homology model (which can require > 30 minutes of CPU time). This would lead to many unnecessary jobs, drastically lowering our throughput, and could lead to inconsistent results, since different jobs can generate different supporting sets and homology models, even for the same protein, due to the inherent randomness in those tasks.
+Second, jobs running on a SGE cluster can die unexpectedly, if, for example, they exceed allocated resources, or if the node on which they are executing experiences a hardware failure. In most cases, the jobs do not get an opportunity to send an error message before they are terminated. Therefore, we had to keep track of all running jobs, and resubmit jobs that do not finish successfully.
 
-	\item In order to send a ``Job Complete'' email once the mutations submitted by a particular user had finished, we had to keep track of the status of all mutations running on the cluster.
+Third, in order to send a ``Job Complete'' email once all mutations submitted by a particular user have been evaluated, we had to keep track of the relationship between mutations and the users that submitted those mutations.
 
-	\item Jobs running on a SGE cluster can die unexpectedly if they exceed allocated resources or if the node on which they are running fails. In most cases, the jobs do not get an opportunity to send an error message before they are killed. Therefore, we could not assume that a job finished successfully if it is no longer running on the cluster and if it has no error messages in the log files. The job may simply have been killed before it had a chance to print an ERROR message.
+One possible way to address those design requirements would be to use an asynchronous task queue, such as Celery. However, since different tasks inside the queue do not have a shared memory state, each task would have to periodically execute a \textit{qstat} command on the SGE master node in order to monitor the status of the submitted job. Since we could have thousands of mutations running on the cluster at the same time, this would not be a scalable solution.
 
-\end{enumerate}
+An alternative approach, which we used for the final design, was to create an independent webservice responsible for submitting ELASPIC jobs to the SGE cluster and monitoring their progress. We called this webservice the ELASPIC ``jobsubmitter''. It was implemented using the \textit{aiohttp} library, which leverages the \textit{asyncio} event loop and improved support for asyncronous programming present in Python 3.5.
 
-One possible way to address this problems would be to use an asyncronous task queue, such as Celery. However, Celery tasks do not share the same memory state, and therefore each worker would have to execute its own \textit{qstat} calls on the SGE master, quickly overloading it with connections and requests. Furthermore,  would not be possible to monitor all mutations for a particular job. The ``job finished'' commands could only be submitted as a cron job by querying the database and looking for finished and / or failed jobs.
+A schematic of the ELASPIC jobsubmitter is presented in Figure \ref{fig:elaspic_jobsubmitter}. Once the jobsubmitter receives a \textit{GET} or \textit{POST} request containing a set of mutations, information concerning those mutations is distributed into the following queues:
 
-and we ultimately opted to have a custom asynchronous task queue that was tailored to ELASPIC and would execute and monitor ELASPIC jobs on a local Sun Grid Engine (SGE) cluster rather than inside the same virtual machine as the webserver.
+\begin{itemize}
+	\itemsep0em
+	\item A ``Provean'' queue, which contains proteins for which a Provean supporting set has not been calculated.
+	\item A ``homology model'' queue, which contains proteins for which a homology model has not been calculated.
+	\item A ``mutation'' queue, which contains individual mutations.
+	\item An ``email'' queue, which contains the set of mutations associated with each job.
+\end{itemize}
 
-A person submitting multiple mutations for the same job would not be unexpected; someone may decide do perform alanine scanning of an interface, etc. This requires the existence of a process which would monitor jobs and submit mutations only when Provean and MODELLER jobs have finished.
+The information from those queues is then processed by the corresponding coroutines:
 
-Since most of the Celery tasks would be IO bound,we could use eventlet or gevent execution pool, which allows for high concurrency by using a large number of ``green threads''.
-managing the shared state between threads
-Would require dedicating significant computational resources solely to ELASPIC, // the server would not scale with the fluctuations indemand.
+\begin{itemize}
+	\itemsep0em
+	\item For each protein in the ``Provean'' queue, a job is submitted to the SGE cluster, which calculates the Provean supporting set. If the Provean supporting set for the protein has already been calculated, the protein is taken of the ``Provean'' queue with no further action.
+	\item For each protein in the ``homology model'' queue, a job is submitted to the SGE cluster, which calculates the homology model of the protein. If the homology model of the protein has already been calculated, the protein is taken of the ``homology model'' queue with no further action.
+	\item For each mutation in the ``mutation'' queue, a job is submitted to the SGE cluster, which runs ELASPIC to calculate the $\Delta \Delta G$ of the mutation. This happens \textit{only if the Provean supporting set and homology model for the protein have already been calculated!}
+	\item For each job in the ``email'' queue, a ``Job Complete'' email is sent to the specified email address once all mutations for the associated job have been completed.
+\end{itemize}
 
+The ELASPIC jobsubmitter is highly performant. It is able to handle over 150 requests per second, even with 30,000 mutations already being processed by the webservice (Figure \ref{fig:elaspic_jobsubmitter_performance}).
 
-
-
-\begin{figure}[!tb]
+\begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.8\textwidth]{static/elaspic/elaspic_jobsubmitter.pdf}
-	\caption[ELASPIC webservice.]{Overview of the ELASPIC jobsubmitter.}
-	\label{fig:elaspic_jobsubmitter}
+
+	\begin{subfigure}{0.8\textwidth}
+		\centering
+		\includegraphics[width=1\linewidth]{static/elaspic/elaspic_jobsubmitter.pdf}
+		\caption{
+		The ELASPIC jobsubmitter was implemented using Python 3.5 and the \textit{aiohttp} library.
+		It includes the \textit{asyncio} event loop, data structures containing information about the mutations being processed, and coroutines which are registered with the \textit{aiohttp} even loop and take turns in performing specific tasks, as described in the figure.
+		}
+		\label{fig:elaspic_jobsubmitter}
+	\end{subfigure}
+	\vspace*{10mm}
+
+	\begin{subfigure}[t]{0.8\textwidth}
+		\centering
+		\includegraphics[width=0.7\linewidth]{static/elaspic/elaspic_jobsubmitter_performance.png}
+		\caption{Plot showing the number of requests per second that the ELASPIC jobsubmitter handle, as a function of the number of mutations that are already being processed by the webservice.}
+		\label{fig:elaspic_jobsubmitter_performance}
+	\end{subfigure}
+	\vspace*{5mm}
+
+	\caption[ELASPIC jobsubmitter.]{
+	Implementation (a) and performance (b) of the ELASPIC jobsubmitter.
+	}
+	\label{fig:ELASPIC jobsubmitter}
+
 \end{figure}
 
 
-\begin{table}[!tb]
-	\centering
-	\caption{ELASPIC web service API.}
-	\label{tab:elaspic_jobsubmitter}
-	\begin{tabular}{lll}
-	\textbf{Method} & \textbf{HTTP request} & \textbf{Description} \\
-	submitjob & POST /submitjob & Submit a job to be run on a SGE cluser. \\
-	jobstatus & GET /submitjob & View the results of a job.
-	\end{tabular}
-\end{table}
 
 
 
@@ -210,31 +229,33 @@ Would require dedicating significant computational resources solely to ELASPIC, 
 \begin{figure}[!tb]
 	\centering
 
-	\begin{subfigure}[t]{0.5\textwidth}
+	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=1\linewidth]{static/elaspic_training_set/elaspic_statistics/protein_statistics.pdf}
-		\caption{.}
-		\vspace*{10mm}
+		\caption{Diagram showing the number of \textit{proteins} in the human SwissProt database that have no Pfam domains (blue), that have Pfam domains but no structural templates (green), that have Pfam domains and structural templates but no homology models (purple), and proteins with a homology model of at least one domain (grey).}
 	\end{subfigure}%
-	\begin{subfigure}[t]{0.5\textwidth}
+	\hspace*{5mm}
+	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=1\linewidth]{static/elaspic_training_set/elaspic_statistics/domain_statistics.pdf}
-		\caption{...}
-		\vspace*{10mm}
+		\caption{Diagram showing the number of \textit{domains} in all proteins in the human SwissProt database for which we failed to create a homology model (purple) and for which we successfully created a homology model (grey). The most common reason for failing to create a homology model is low sequence identity between the Profs domain and the structural template.}
 	\end{subfigure}
+	\vspace*{10mm}
 
-	\begin{subfigure}{1.0\textwidth}
+	\begin{subfigure}{0.55\textwidth}
 		\centering
-		\includegraphics[width=0.55\linewidth]{static/elaspic_training_set/elaspic_statistics/structural_coverage_hist.pdf}
-		\caption{...}
-	\end{subfigure}%
-	\caption[Precalculated data for human proteins.]{Statistics on homology modelling coverage.}
+		\includegraphics[width=1\linewidth]{static/elaspic_training_set/elaspic_statistics/structural_coverage_hist.pdf}
+		\caption{The fraction of protein sequence covered by a Profs domain with a homology model, for all proteins in the human SwissProt database with a homology model of at least one domain.}
+	\end{subfigure}
+	\vspace*{5mm}
+
+	\caption[Precalculated homology models of human proteins.]{Plots showing the number of proteins for which we could create a homology model (a), the number of domains for which we could create a homology model (b), and the structural coverage of proteins with at least one modelled domain (c). Plots were generated for human proteins in the SwissProt database.}
 
 \end{figure}
 
 
 \begin{figure}[!tb]
 	\centering
-	\includegraphics[width=0.4\linewidth]{static/elaspic_training_set/elaspic_statistics/missing_model_protein_pair_novarsplice.pdf}
-	\caption[Precalculated data for human protein-protein interactions.]{...}
+	\includegraphics[width=0.5\linewidth]{static/elaspic_training_set/elaspic_statistics/missing_model_protein_pair_novarsplice.pdf}
+	\caption[Precalculated homology models of human protein-protein interactions.]{Number of homo-dimeric (red) and hetero-dimeric (grey) protein-protein interactions for which we created a homology model (left) and failed to create a homology model (right). In this figure, protein-protein interactions are all pairs of proteins from the human SwissProt database that are found to interact according to one of the protein-protein interaction databases (see Figure \ref{fig:ppi_database_overlap}) and that that have at least one structural template of the interaction.}
 \end{figure}
