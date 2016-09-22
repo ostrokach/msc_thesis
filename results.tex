@@ -1,129 +1,88 @@
 % !TEX root = msc_thesis.tex
 
-\chapter{Results} \label{chap:results}
+\chapter{Results} \label{ch:results}
 
-After making changes to the ELASPIC pipeline that are described in Chapter \ref{chap:implementation}, we retrained ELASPIC core and interface predictors and validated them on new data.
+After making changes to the ELASPIC pipeline that are described in Section \ref{sec:elaspic}, we retrained ELASPIC core and interface predictors and validated them on new data. This involved curating high-quality training, validation and test datasets, selecting the best hyperparameters for the machine learning algorithm using grid-search, selecting the set of most informative features using feature elimination, and testing the final predictor on external datasets to compare our performance with competing methods.
+
+The changes made to the ELASPIC pipeline and the large number of precalculated mutations associated with human disease.
+
 
 
 \section{Datasets}
 
-The datasets that were used to train, validate and test the predictors are described in Table \ref{tab:datasets}. We made sure that no mutations in the test set appear in our training and validation sets (see Figures \ref{fig:training_set_overlap_core} and \ref{fig:training_set_overlap_interface} for core and interface mutations, respectively). In the case of Humsavar, ClinVar and COSMIC datasets, we made sure that no \textit{protein} in the test set appear in the training and validation sets.
+All datasets that we used to train, validate and test the predictors are described in Table \ref{tab:datasets}. The dataset that we used to train the core predictor, labelled ``Protherm'' for simplicity, contains data from the Protherm database \cite{bava_protherm_2004} combined with datasets curated by Kellogg \textit{et al.} \cite{kellogg_role_2011}. The dataset that we used to train the interface predictor, labelled ``Skempi'' for simplicity, contains data from the Skempi database \cite{moal_skempi:_2012} combined with the dataset curated by Kortemme and Baker \cite{kortemme_simple_2002}.
+
+We evaluated mutations in our training set using both the standalone and the database pipelines in order to make sure that both pipelines produce comparable results and that the resulting predictors perform equally well for both pipelines. The main difference between the standalone and database pipelines is that the standalone pipeline constructs the Provean supporting set using the sequence of the PDB chain that is being mutated, while the database pipeline constructs the Provean supporting set using the sequence of the entire protein containing the domain that is being mutated. For the database pipeline we attempted to construct several homology models ranging from low to high sequence identity for each mutation. We expected that including more proteins of lower sequence identity would improve the ability of the predictor to generalize to external datasets, since the training set is over-represented in proteins that have a crystal structure deposited in the PDB.
 
 Previously, we had seen a low correlation between ELASPIC-predicted $\Delta \Delta G$ and the deleteriousness of mutations. To address this, we split the Humsavar, ClinVar, and COSMIC datasets into validation and test subsets, and used the performance on the validation subset as part of the scoring function for selecting the optimal hyperparameters and number of features.
 
+We made sure that no mutations in the test set appear in our training and validation sets (see Figures \ref{fig:training_set_overlap_core} and \ref{fig:training_set_overlap_interface} for core and interface mutations, respectively). In the case of Humsavar, ClinVar and COSMIC datasets, we made sure that no \textit{protein} in the test set appear in the training and validation sets.
 
+% \clearpage
+\input{datasets.tex}
+
+
+\clearpage
 \section{Hyperparameter optimisation}
 
-We used the $combined\_score_{core}$ and $combined\_score_{interface}$ metrics, given by Equations \ref{eq:combined_score_core} and \ref{eq:combined_score_interface}, respectively, to evaluate the performance of the predictors during hyperparameter optimization and feature elimination. We expected that this would allow us to select a predictor that performs well not only on the training set, but also generalized to other datasets. While mutation deleteriousness and $\Delta \Delta G$ are different metrics, it is expected that deleterious mutations, on average, should have a higher impact on protein structure that benign mutations. Therefore, accurate $\Delta \Delta G$ predictions should have a higher correlation with the deleteriousness score, defined as $1$ for deleterious mutations and $0$ for benign mutations.
+ELASPIC uses the gradient boosting regressor (GBR) algorithm, implemented in scikit-learn \cite{scikit-learn}, to  combine over 70 different sequential and structural features into a score that corresponds to the Gibbs free energy change of protein folding or protein-protein interaction. The GBR algorithm was selected because it achieved higher performance than linear regression, support vector machine and random forest algorithms, in 20-fold cross-validation over the training set \cite{berliner_combining_2014}.
 
-The performance on all datasets is correlated.
+Since the ELASPIC pipeline received many bugfixes since the original publication, and was restructured to work as a backend to a webserver, we retrained GBR predictors using features generated by the updated pipeline. In order to select the best set of GBR hyperparameters, we performed exhaustive ``grid-search'', where we measured the performance of the GBR algorithm for 3,600 different combinations of hyperparameters (Table \ref{tab:gridsearch_parameters}). For each set of parameters, we computed the Spearman correlation between predicted and experimental $\Delta \Delta G$ values for mutations in the training set, using 4-fold cross-validation. We also computed the Spearman correlation between predicted $\Delta \Delta G$ values and the measured values for our ``Validation'' datasets (datasets in Table \ref{tab:datasets} annotated as ``Validation''). In the case of the ``Taipale'' dataset, the experimental value was the difference in the average LUMIER score between the wildtype and mutant proteins and the corresponding chaperones. In the case of the ``Taipale PPI'' dataset, the experimental value was $1$ if the mutation led to the loss of the interaction and $0$ if it led to the gain of interaction or if it had no effect. In the case of the ``Taipale GPCA'' dataset, the experimental value was the difference in \textit{Gaussia princeps} luminosity between wild-type and mutant proteins. In the case of ``Humsavar'', ``ClinVar'' and ``COSMIC'' datasets, the experimental value was $1$ if the mutation was classified as deleterious and $0$ if it was classified as benign. While mutation deleteriousness and $\Delta \Delta G$ are different metrics, it is expected that deleterious mutations, on average, should have a higher impact on protein structure that benign mutations. Therefore, accurate $\Delta \Delta G$ predictions should have a higher correlation with the deleteriousness score, defined as $1$ for deleterious mutations and $0$ for benign mutations.
+
+We used the combined scores $CS_{core}$ (Equations \ref{eq:combined_score_core}) and $CS_{interface}$ (Equation \ref{eq:combined_score_interface}) to select the best set of hyperparameters for the core and interface predictors. The contribution of each dataset to the combined score was selected in an ``ad-hoc'' manner, assigning more weight to large datasets than to small datasets, and making sure that the performance on energy-based datasets, including training and Taipale datasets, had a bigger overall impact on the combined score than performance on a deleteriousness-based datasets, such as Humsavar, ClinVar and COSMIC. We used combined scores instead of cross-validation alone because we wanted to select predictors that not only perform well on the training set, but also generalize to external datasets. Since our training sets are limited and biased in the number and type of proteins and protein-protein interactions that they contain, the performance of the predictor in cross-validation may not be an accurate indicator of its performance in general. Since our validation datasets contain many more distinct proteins, protein-protein interactions and mutations than our training sets, they offer a helpful indication of how well predictors generalize to other proteins in the human genome.
 
 \begin{equation} \label{eq:combined_score_core}
-	\begin{aligned}
-    combined\_score_{core} =
-		\frac{1}{7} \cdot \Big[
-			& 3 \cdot Cross\_validation \\
-			& + Humsavar + ClinVar + COSMIC \\
-			& + Taipale\Big]
-	\end{aligned}
+    CS_{core} = \frac{3 \cdot Cross\_validation + Humsavar + ClinVar + COSMIC + Taipale}{7}
 \end{equation}
 
 \begin{equation} \label{eq:combined_score_interface}
-	\begin{aligned}
-    combined\_score_{interface} =
-		\frac{1}{6.5} \cdot \Big[
-			& 3 \cdot Cross\_validation \\
-			& + Humsavar + ClinVar + COSMIC \\
-			& + \frac{1}{4} \cdot \left(Taipale\_{PPI} + Taipale\_{GPCA}\right)\Big]
-	\end{aligned}
+    CS_{interface} = \frac{3 \cdot Cross\_validation + Humsavar + ClinVar + COSMIC + \frac{Taipale\_{PPI}}{4} + \frac{Taipale\_{GPCA}}{4}}{6.5}
 \end{equation}
 
+We plot the performance of core and interface predictors trained using different sets of hyperparameters and sorted according to the combined score in Figures \ref{fig:gridsearch_core} and \ref{fig:gridsearch_interface}. Cross-validation performance of the predictor is highly correlated with its performance on the validation datasets. However, selecting hyperparameters solely based on cross-validation performance would result in a predictor that substantially underperforms on the validation datasets.
 
+\clearpage
+\input{gridsearch.tex}
+
+
+\clearpage
 \section{Feature elimination}
 
+After selecting the best set of hyperparameters for core and interface predictors, we performed feature elimination to evaluate the contribution of each feature to the overall accuracy of the predictor, and to select the sets of features that result in the most accurate predictions.
+
+Feature elimination was performed using a recursive strategy, which involved:
+
+\vspace{-\topsep}
+\begin{itemize}
+	\itemsep0em
+	\item Leaving out each feature from the training set, one at a time.
+	\item Training the predictor using all but the left out feature.
+	\item Calculating the combined score ($CS_{core}$ or $CS_{interface}$) evaluating the performance of the predictor.
+	\item Discarding the feature that, when left out, produced the predictor with the highest combined score.
+	\item Repeating the process until only one feature remains.
+\end{itemize}
+
+Performances of the core and interface predictors at every step of feature elimination are shown in Figures \ref{fig:feature_elimination_core} and \ref{fig:feature_elimination_interface}. The sets of features that produced the best-performing predictors are described in Tables \ref{tab:core_features} and \ref{tab:interface_features}.
+
+Most features play a surprisingly small role in the performance of the ELASPIC predictor. In fact, we can achieve near-optimal performance with both core and interface predictors by using only 6 features (displayed in bold in Tables \ref{tab:core_features} and \ref{tab:interface_features}). This suggests either that most features are not informative in predicting the energetic effect of mutations, or that the training set is too noisy for the contribution of those features to make a significant impact on the accuracy of the predictor.
+
+\clearpage
+\input{feature_elimination.tex}
 
 
+\clearpage
 \section{Validation}
 
-We used a combined score to select the best SGB hyperparameters during grid-search over parameter space, and to select the optimal number of features during feature elimination.
+The final ELASPIC core and interface predictors were trained using gradient boosting regressor hyperparameters listed in Tables \ref{tab:core_hyperparameters} and \ref{tab:core_features} and sets of features described in Tables \ref{tab:interface_hyperparameters} and \ref{tab:interface_features}. Performance of the resulting predictors on the training, validation and test datasets are presented in Figures \ref{fig:core_validation} and \ref{fig:interface_validation}, for core and interface predictors, respectively.
 
+The ELASPIC core predictor outperforms FoldX and Provean on the Taipale dataset, which is the only validation dataset explicitly measuring the effect of mutations on protein stability rather than whether or not the mutation is associated with a disease (Figure \ref{fig:validation_performance_core}). It also outperforms FoldX and Provean on the core subsets of the SUMO and AB-Bind test datasets (Figure \ref{fig:test_performance_core}). The core subsets of those datasets only contain mutations located more than 6 {\AA} away from another chain in the PDB.
 
-SGB hyperparameters and the number of features to optimize both cross-validation performance on the training set and performance on the validation sets.
+The ELASPIC interface predictor also outperforms FoldX and Provean on the Taipale GPCA dataset (Figure \ref{fig:validation_performance_interface}). It performs marginally worse than Provean on the Taipale PPI dataset, but this is likely because the Taipale PPI dataset is mostly made up of deleterious mutations, which are predicted well by Protherm. The ELASPIC interface outperforms Protherm and FoldX on the SUMO Ligase and AB-Bind test datasets (Figure \ref{fig:test_performance_interface}) both alone and in combination with the core predictor. The ELASPIC interface predictor shows slightly lower performance than FoldX on the very small Benedix dataset.
 
-
-
-
-
-
-output and the validation parts of those datasets throughout hyperparameter optimization (green, red and purple lines in Figures \ref{fig:gridsearch_core} and \ref{fig:gridsearch_interface}) and feature elimination (green, red and purple lines in Figures \ref{fig:feature_elimination_core} and \ref{fig:feature_elimination_interface}). ELASPIC uses the stochastic gradient boosting regression (GBR) algorithm, implemented in scikit-learn \cite{scikit-learn}.
-
-
-
-ELASPIC described in output xxx features in total.
-1. We calculated those features for the Provean and the Skempi training sets.
-2. We removed features that were note different in any of the training cases (xxx for core mutations and yyy for interface mutations).
-
-
-3. It has been reported that balancing the training set by including both positive and negative samples
-
-
-As described in [], balancing the training set can significantly improve performance. However, with Provean balancing the training set can bias the result because most mutations are to unconserved amino acids (often alanine) and
-
-
-Most structural features play a surprisingly small role in the performance of the ELASPIC predictor. In fact, we can achieve near-optimal performance with both core and interface predictors by using only 6 features (displayed in bold in Tables \ref{tab:core_features} and \ref{tab:interface_features}). This suggests either that most features are not informative in predicting the energetic effect of mutations, or that the training set is too noisy for the contribution of those features to make a significant impact on the accuracy of the predictor.
-
-Provean score and, in the case of the core predictor, BLOSUM62 matrix score, where the only sequence-based featurs selected through feature elimination.
-
-We built two core predictors and two interface predictors:
-
-\begin{enumerate}
-	\item No sequence features but a balanced training set.
-	\item Sequence features but no balanced training set.
-\end{enumerate}
-
-- Accuracy over different sequence identity bins
-
-- within protein correlation on the test set
-
-
-
-\section{Datasets}
-
-
-
-% \begin{figure}[ht!]
-% 	\centering
-% 	\includegraphics[width=0.65\textwidth]{static/elaspic_training_set/data_statistics/training_set_overlap_data_core.pdf}
-% 	\caption[Size and overlap of core and interface datasets.]{Size and overlap of core and interface datasets.}
-% \end{figure}
-
-
-
-\section{Machine learning}
-
+Both the core and interface predictors performs better than FoldX but worse than Provean on the validation and test subsets of the Humsavar, ClinVar and COSMIC (Figures \ref{fig:test_performance_core} and \ref{fig:test_performance_interface}). The low performance of the ELASPIC compared to Provean was expected, since the ELASPIC core predictor attempts to model the effect of mutations on protein stability, and does not account for other reasons that may lead to a mutation being deleterious. For example, mutations could affect the active site or the signal sequence of a protein, which may prove to be highly deleterious to the organism but have only a marginal effect on protein stability.
 
 
 
 
 \clearpage
-
-\section{Predicting mutation-induced changes in the Gibbs free energy of protein folding}
-
-\subsection{Hyperparameter optimization and feature elimination}
-
-\subsection{Validation}
-
-
-
-
-% \clearpage
-
-
-
-\section{Predicting mutation-induced changes in the Gibbs free energy of protein-protein interaction}
-
-\subsection{Hyperparameter optimization and feature elimination}
-
-\subsection{Validation}
-
-\clearpage
+\input{validation.tex}

@@ -1,0 +1,169 @@
+
+- Existing approaches remain limited in their ability to predict disease-causing variants. In a study of 1571 mutations of the CFTR gene causing cystic fibrosis, (SIFT, PolyPhen, PANTHER) \cite{dorfman_common_2010}
+
+The local pipeline still requires a local copy of the Blast nr database.
+
+We used the MODELLER software package to perform all homology modeling.
+
+``MODELLER uses simulated annealing cycles along with a minimal forcefield and spatial restraints -- generally Gaussian interatomic probability densities extracted from the template structure with database-derived statistics determining the distribution width—to rapidly generate candidate structures of the target sequence from the provided template sequence.''
+
+
+Statistical potentials
+
+Physics-based methods
+the electrostatic, van der Waals, solvent accessible surface area, and entropy terms
+
+Concoord/Poisson-Boltzmann surface area (CC/PBSA server)
+
+The central dogma of biology is that DNA is transcribed into RNA which is translated into Protein.
+
+
+Some algorithms rely on the conservation of the residue in multiple sequence alignments.
+
+Predicting protein thermal stability changes upon point mutations using statistical potentials: Introducing HoTMuSiC
+
+  - MAESTRO implements a multi-agent machine learning system.
+
+  - Structure based tools AUTO-MUTE [7], CUPSAT [8], Dmutant [9], FoldX [10], Eris [11], PoPMuSiC [12], SDM [13] or mCSM [14] usually perform better than the sequence based counterparts. Recently, SDM and mCSM have been integrated into a new method called DUET [15].
+
+INPS: predicting the impact of non-synonymous variations on protein stability from sequence
+
+  - \url{http://bioinformatics.oxfordjournals.org/content/31/17/2816.long}
+
+  - Here, we describe INPS, a novel approach for annotating the effect of non-synonymous mutations on the protein stability from its sequence.
+
+  - \cite{fariselli_inps:_2015}
+
+FoldX
+
+PoPMuSiC
+
+RosettaCM
+
+mCSM: predicting the effects of mutations in proteins using graph-based signatures.
+
+  - \url{http://www.ncbi.nlm.nih.gov/pubmed/24281696}
+
+  - ``To understand the roles of mutations in disease, we have evaluated their impacts not only on protein stability but also on protein-protein and protein-nucleic acid interactions''.
+
+  - \cite{pires_mcsm:_2014}
+
+
+Predicting Binding Free Energy Change Caused by Point Mutations with Knowledge-Modified MM/PBSA Method
+
+  - \url{http://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1004276}
+
+  - ``The core of the SAAMBE method is a modified molecular mechanics Poisson-Boltzmann Surface Area (MM/PBSA) method with residue specific dielectric constant''.
+
+  - \cite{petukh_predicting_2015}
+
+
+
+% Benchmarks
+
+Rosetta benchmark \cite{o_conchuir_web_2015}
+
+Benchmark showing Rosetta doing poorly: \cite{potapov_assessing_2009}
+
+I-Mutant2, DMutant, CUPSAT, FoldX \cite{khan_performance_2010}
+
+
+Provean score and, in the case of the core predictor, BLOSUM62 matrix score, where the only sequence-based featurs selected through feature elimination.
+
+Out of the features that remain after feature elimination.
+``By weighting the individual averaged energy contributions (sepa-
+rately for folding free energies and protein-protein binding affinities)
+water contributions are implicitly taken into account.''
+
+
+- Use covariation between amino acids in addition to the conservation score to predict the impact of mutations, as described by Kowarsch et. al. \cite{kowarsch_correlated_2010}.
+
+- Standard conservation metrics, such as Provean, may predict a certain substitution to be benign because it occurs in other organisms. However, this does not take into account any potentially covarying mutations that mask the deleterious effect of the mutation in question.
+
+- As described in [], balancing the training set can significantly improve performance. However, with Provean balancing the training set can bias the result because most mutations are to unconserved amino acids (often alanine) and
+
+
+% Replace FoldX with MODELLER
+
+- Use multiple templates when building the homology models.
+- Create multiple models and choose the one with the highest DOPE score.
+- Refine the model using molecular dynamics, although it has been reported that long-term MD is not useful for optimizing structures in most cases \cite{raval_refinement_2012}.
+
+
+Cystic fibrosis
+
+
+
+Long QT syndrome
+
+  - Assessment of the predictive accuracy of five \textit{in-silico} prediction tools, alone or in combination, and two meta-servers to classify long QT syndrome gene mutations.
+
+  - \url{http://www.ncbi.nlm.nih.gov/pubmed/25967940}
+
+
+% === Published post factum ===
+
+FireProt: Energy- and Evolution-Based Computational Design of Thermostable Multiple-Point Mutants
+
+  - \url{http://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1004556}
+
+  - Predict the structural effect of multiple mutations.
+
+  - ``Stability effects of all possible single-point mutations were estimated using the <BuildModel> module of FoldX''.
+
+  - We demonstrate that thermostability of the model enzymes haloalkane dehalogenase DhaA and γ-hexachlorocyclohexane dehydrochlorinase LinA can be substantially increased.
+
+  - \cite{bednar_fireprot:_2015}
+
+
+
+HOPE THAT PROVEAN WOULD AT LEAST PARTIALLY MAKE UP FOR THE LIMITING ASSUMPTION THAT THE BACKBONE REMAINS STABLE BETWEEN MUTATIONS.
+
+SCIENTIFICALLY INTERESTING TO SEE WHAT EFFECT MD RELAXATIONS WOULD HAVE ON THE PERFORMANCE OF THE ALGORITHM.
+% \subsection{Protein-protein interactions}
+
+Predict PPIs: PRISM: Protein interaction by structure matching.
+
+% \subsection{Protein-ligand interactions}
+
+- drugging protein-protein interfaces \cite{wells_reaching_2007}
+
+Platinum: Protein-ligand affinity change upon mutation database.
+
+- \url{http://bleoberis.bioc.cam.ac.uk/platinum/}
+
+BioLiP is a semi-manually curated database for high-quality, biologically relevant ligand-protein binding interactions.
+
+- \url{http://zhanglab.ccmb.med.umich.edu/BioLiP/}
+
+- The structure data are collected primarily from the Protein Data Bank, with biological insights mined from literature and other specific databases.
+
+% \subsection{Protein-DNA/RNA interactions}
+
+ProNIT
+
+RBPDB: a database of RNA-binding specificities
+
+\url{http://rbpdb.ccbr.utoronto.ca}
+
+Paper: \url{http://nar.oxfordjournals.org/content/39/suppl_1/D301}
+
+% \subsection{Protein-peptide interactions}
+
+ELM
+
+% \subsection{Phosphorylated residue-mediated interactions}
+
+
+% \section{ELASPIC v2.0}
+% Improve domain definitions and alignments
+
+eSCOP
+
+Gene3D
+
+- Use sequence profiles (e.g. Pfam or Gene3D) to guide the alignment.
+
+``The resulting transformer has then learned a supervised, sparse, high-dimensional categorical embedding of the data.''
+
+% \url{http://scikit-learn.org/stable/auto_examples/ensemble/plot_feature_transformation.html\#example-ensemble-plot-feature-transformation-py}

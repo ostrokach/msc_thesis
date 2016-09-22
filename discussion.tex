@@ -1,64 +1,68 @@
 % !TEX root = msc_thesis.tex
 
-\chapter{Discussion} \label{chap:discussion}
+\chapter{Discussion} \label{ch:discussion}
 
+The results of this work are mixed.
 
+The main goal of this work was to improve our ability to predict whether or not a mutations is going to be deleterious and predicting the phenotypic effect of mutations by evaluating the structural impact of mutations instead of looking solely at how conserved the particular is in different organisms and species.
 
-In the set of features selected through feature elimination, there are both sequence-based features and structure-based features. The most important sequence-based feature is the Provean score
+In the set of features selected through feature elimination, there are both sequence-based features and structure-based features. The most important sequence-based feature is the Provean score.
 
-Out of the remaining featues,
-Results of feature elimination support the view that electrostatics, Van der Waals forces and entropy are the main forces determining the effect of mutations, as proposed by Benedix \textit{et al.} in the Concoord/Poisson-Boltzmann surface area model (Equation \ref{eq:benedix_et_al}).
-
-Out of the features that remain after feature elimination.
+Results of feature elimination support the view that electrostatics, van der Waals forces and entropy are the main forces determining the effect of mutations, as proposed by Benedix \textit{et al.} in the Concoord/Poisson-Boltzmann surface area model (Equation \ref{eq:benedix_et_al}).
 
 \begin{equation} \label{eq:benedix_et_al}
     \Delta G_{CC/PBSA} = \Delta G_{electrostatic} + \Delta G_{van\ der\ Waals} + \Delta G_{entropy}
 \end{equation}
 
-``By weighting the individual averaged energy contributions (sepa-
-rately for folding free energies and protein-protein binding affinities)
-water contributions are implicitly taken into account.''
-
-
-- Use covariation between amino acids in addition to the conservation score to predict the impact of mutations, as described by Kowarsch et. al. \cite{kowarsch_correlated_2010}.
-
-- Standard conservation metrics, such as Provean, may predict a certain substitution to be benign because it occurs in other organisms. However, this does not take into account any potentially covarying mutations that mask the deleterious effect of the mutation in question.
-
-
-% Replace FoldX with MODELLER
-
-- Use multiple templates when building the homology models.
-- Create multiple models and choose the one with the highest DOPE score.
-- Refine the model using molecular dynamics, although it has been reported that long-term MD is not useful for optimizing structures in most cases \cite{raval_refinement_2012}.
+Since the publication of the ELASPIC pipeline \cite{berliner_combining_2014} and webserver \cite{witvliet_elaspic_2016}, several other algorithms have been published which use a similar approach as ELASPIC to either predict mutation deleteriousness \cite{baugh_robust_2016} or the $\Delta \Delta G$ \cite{li_mutabind_2016}.
 
 
 
+\section{Adding support for multiresidue mutations}
 
-Cystic fibrosis
+ELASPIC can easily be extended to calculate the $\Delta \Delta G$ for mutations involving multiple amino acids. The main problem that would have to be solved
+
+The tricky part is that the number of features changes with the number of amino acids that are mutated. We could address this by treating a mutation affecting multiple amino acids as a set of single amino acid mutations. For example, we could use the following recursive strategy:
+
+% \vspace{-\topsep}
+\begin{itemize}
+	\itemsep0em
+    \item Introduce each of the single amino acid mutations, one at a time.
+    \item Select the single amino acid mutation with the most stabilizing effect.
+    \item Repeat for the remaining mutations, using the structure containing the mutation selected in Step 2.
+\end{itemize}
+
+About one third on mutations in the Protherm and Skempi databases affect multiple amino acids. We could include those mutations in the training set by dividing them into single amino acid mutations and assigning to them a $\Delta \Delta G$ proportional to their contribution to the overall mutation score, as determined by the multiple amino acid substitution version of ELASPIC. This would require ``bootstrapping'' the ELASPIC predictor using single amin acid mutations, using the ``bootstrapped'' predictor to approximate the contribution of single amino acid mutaitons to the $\Delta \Delta G$ affecting mulitple amino acids, adding those mutations to the training set, and repeating.
+
+In the case of the ELASPIC core predictor, we could create a dataset of multiple amino acid polymorphisms (MAAMs) from a thermophilic bacterium and it's closest non-thermophilic relative (maybe such a database already exists?). Cross-validate ELASPIC making sure that we predict those MAAMs to be stabilizing. Incorporate those MAAMs into our training set, weighting them accordingly.
+
+In the case of the ELASPIC interface predictor, we could construct a dataset from phage-display read counts, and cross-validate ELASPIC while keeping track of its performance on phage display counts. Could then recursively incorporate the phage display data into the training set, weighting it by how well the ELASPIC predictor does on those mutations, as determined through cross-validation.
+
+It is likely that the performance of the ELASPIC predictor would be lower for mutations affecting multiple amino acids than for mutations affecting a single amino acids, as the former is more likely to induce changes in the conformation of the protein that are not modelled by ELASPIC. This drop in performance could in-part be ameliorated by including a backbone relaxation step between each mutation, using molecular dynamics \cite{abraham_gromacs:_2015}, Rosetta Backrub \cite{smith_predicting_2011}, or other algorithms \cite{sun_protein_2016}.
+
+If the ELASPIC predictor can achieve reasonable results for mutations affecting multiple amino acids, it could be used ``in reverse'' to design protein domains with increased stability and protein interfaces with increased affinity.
 
 
-
-Long QT syndrome
-
-  - Assessment of the predictive accuracy of five \textit{in-silico} prediction tools, alone or in combination, and two meta-servers to classify long QT syndrome gene mutations.
-
-  - \url{http://www.ncbi.nlm.nih.gov/pubmed/25967940}
-
-
-% === Published post factum ===
-
-Since the publication of the ELASPIC pipeline \cite{berliner_combining_2014} and webserver \cite{witvliet_elaspic_2016}, several other algorithms have been published which use a similar approach as ELASPIC to either predict mutation deleteriousness \cite{baugh_robust_2016} or the $\Delta \Delta G$.
+\section{Adding support for more interaction types}
 
 
 
 
-VIPUR \cite{baugh_robust_2016}
+\section{Multitask learning of mutation deleteriousness and energetic effects}
 
-% ddG
+In this work, we attempted to improve the generalizability of ELASPIC core and interface predictors by keeping track of their performance on mutation deleteriousness datasets throughout cross-validation and feature elimination (Figures \ref{fig:gridsearch_core}, \ref{fig:gridsearch_interface}, \ref{fig:feature_elimination_core} and \ref{fig:feature_elimination_interface}). While this approach prevents us from selecting predictors that overfit the training set, it does not improve the accuracy of any individual predictor.
 
-MutaBind \cite{li_mutabind_2016}.
+One way to improve overall accuracy of the predictors would be to leverage information contained in mutation deleteriousness datasets to discover better and more useful features. Mutation deleteriousness datasets are much larger than the $\Delta \Delta G$ datasets, and they may allow sequential and structural features to ``mix'' in a more general environment, and produce combined features that are less noisy and better correlated with the actual effect of mutations.
 
+We could learn those features by first training a boosted decision tree algorithm to predict mutation deleteriousness, and then use the output of those trees as input to a logistic regression model trained to predict mutation $\Delta \Delta G$ (Figure \ref{fig:multitask_learning}). The resulting predictor should not only have better accuracy, but also have a better ability to extrapolate than the currently-used gradient boosted regressor algorithm, which never predicts values that are higher than the highest values observed in the training set.
 
-
-
-\section{Protein science}
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=0.8\textwidth]{static/elaspic/multitask_learning.pdf}
+	\caption[Multitask learning of mutation deleteriousness and $\Delta \Delta G$.]{
+		Multitask learning of mutation deleteriousness and $\Delta \Delta G$.
+        The figure is adapted from He \textit{et al.} \cite{he_practical_2014}, where it is used to describe an algorithm that couples boosted decision trees and linear regression to predict add click-trough rate. Boosted decision trees are used to learn a feature ``manifold'' that is provided as input to the linear classifier, which in turn makes the final predictions. \\
+        We propose to use a similar design, but train boosted decision trees to predict mutation deleteriousness, and fit a linear regressor to predict mutation $\Delta \Delta G$. We anticipate that the large training set of benign and deleterious mutations would allow the boosted decision tree algorithm to learn useful and generalizable features.
+	}
+	\label{fig:multitask_learning}
+\end{figure}
