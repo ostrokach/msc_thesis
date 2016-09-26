@@ -2,9 +2,11 @@
 
 \chapter{Discussion} \label{ch:discussion}
 
-Two main factors limit the accuracy and the generalizability of ELASPIC. First, training datasets for both the core and interface predictors are limited in their accuracy and are biased in the types of mutations that they contain. For example,
+The primary goal of this project was to extend ELASPIC and make it possible to predict the effect of mutations on protein stability and protein-protein interaction affinity on a genome-wide scale. This was  p
 
-Does not work for ``edgetic mutations'' (data not shown).
+To our knowledge, this is the first study comparing the impact of mutations on protein stability and protein-protein interaction affinity with mutation deleteriousness on a genome-wide scale.
+
+Two main factors limit the accuracy and the generalizability of ELASPIC. First, training datasets for both the core and interface predictors are limited in their accuracy and are biased in the types of mutations that they contain. Second, most features that we calculate do not appear to be very informative.
 
 The main goal of this work was to improve our ability to predict whether or not a mutations is going to be deleterious and predicting the phenotypic effect of mutations by evaluating the structural impact of mutations instead of looking solely at how conserved the particular is in different organisms and species.
 
@@ -16,7 +18,22 @@ Results of feature elimination support the view that electrostatics, van der Waa
     \Delta G_{CC/PBSA} = \Delta G_{electrostatic} + \Delta G_{van\ der\ Waals} + \Delta G_{entropy}
 \end{equation}
 
-Since the publication of the ELASPIC pipeline \cite{berliner_combining_2014} and webserver \cite{witvliet_elaspic_2016}, several other algorithms have been published which use a similar approach as ELASPIC to either .
+- Use multiple templates when building the homology models.
+- Create multiple models and choose the one with the highest DOPE score.
+- Refine the model using molecular dynamics, although it has been reported that long-term MD is not useful for optimizing structures in most cases \cite{raval_refinement_2012}.
+
+FireProt: Energy- and Evolution-Based Computational Design of Thermostable Multiple-Point Mutants
+
+  - \url{http://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1004556}
+
+  - Predict the structural effect of multiple mutations.
+
+  - ``Stability effects of all possible single-point mutations were estimated using the <BuildModel> module of FoldX''.
+
+  - We demonstrate that thermostability of the model enzymes haloalkane dehalogenase DhaA and γ-hexachlorocyclohexane dehydrochlorinase LinA can be substantially increased.
+
+  - \cite{bednar_fireprot:_2015}
+
 
 
 
@@ -47,6 +64,56 @@ If the ELASPIC predictor can achieve reasonable results for mutations affecting 
 
 \section{Adding support for more interaction types}
 
+HOPE THAT PROVEAN WOULD AT LEAST PARTIALLY MAKE UP FOR THE LIMITING ASSUMPTION THAT THE BACKBONE REMAINS STABLE BETWEEN MUTATIONS.
+
+SCIENTIFICALLY INTERESTING TO SEE WHAT EFFECT MD RELAXATIONS WOULD HAVE ON THE PERFORMANCE OF THE ALGORITHM.
+% \subsection{Protein-protein interactions}
+
+Predict PPIs: PRISM: Protein interaction by structure matching.
+
+% \subsection{Protein-ligand interactions}
+
+- drugging protein-protein interfaces \cite{wells_reaching_2007}
+
+Platinum: Protein-ligand affinity change upon mutation database.
+
+- \url{http://bleoberis.bioc.cam.ac.uk/platinum/}
+
+BioLiP is a semi-manually curated database for high-quality, biologically relevant ligand-protein binding interactions.
+
+- \url{http://zhanglab.ccmb.med.umich.edu/BioLiP/}
+
+- The structure data are collected primarily from the Protein Data Bank, with biological insights mined from literature and other specific databases.
+
+% \subsection{Protein-DNA/RNA interactions}
+
+ProNIT
+
+RBPDB: a database of RNA-binding specificities
+
+\url{http://rbpdb.ccbr.utoronto.ca}
+
+Paper: \url{http://nar.oxfordjournals.org/content/39/suppl_1/D301}
+
+% \subsection{Protein-peptide interactions}
+
+ELM
+
+% \subsection{Phosphorylated residue-mediated interactions}
+
+
+% \section{ELASPIC v2.0}
+% Improve domain definitions and alignments
+
+eSCOP
+
+Gene3D
+
+- Use sequence profiles (e.g. Pfam or Gene3D) to guide the alignment.
+
+``The resulting transformer has then learned a supervised, sparse, high-dimensional categorical embedding of the data.''
+
+% \url{http://scikit-learn.org/stable/auto_examples/ensemble/plot_feature_transformation.html\#example-ensemble-plot-feature-transformation-py}
 
 
 

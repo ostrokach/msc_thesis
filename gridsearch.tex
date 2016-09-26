@@ -5,6 +5,7 @@
 	\caption[Core predictor hyperparameter optimization.]{
         Core predictor hyperparameter optimization.
         The combined score (black line) was calculated using Equation \ref{eq:combined_score_core}.
+		We chose the set of hyperparameters that correspond to the predictor with the highest combined score.
     }
 	\label{fig:gridsearch_core}
 \end{figure}
@@ -14,6 +15,7 @@
     \caption[Interface predictor hyperparameter optimization.]{
         Interface predictor hyperparameter optimization.
         The combined score (black line) was calculated using Equation \ref{eq:combined_score_interface}.
+		We chose the set of hyperparameters that correspond to the predictor with the highest combined score.
     }
 	\label{fig:gridsearch_interface}
 \end{figure}
@@ -24,7 +26,8 @@
     \captionsetup{width=0.6\textwidth}
 	\centering
 	\caption[Hyperparameter search space.]{
-        Hyperparameter search space for tuning the gradient boosting regressor algorithm used in the core and interface predictors. An all-by-all combination of these hyperparameters was explored in order to find those that produce the best-performing predictors.
+        Hyperparameter search space for tuning the gradient boosting regressor algorithm used in the core and interface predictors.
+		An all-by-all combination of those hyperparameters was explored in order to find the sets of hyperparameters that produce the best-performing predictors.
     }
 	\label{tab:gridsearch_parameters}
 	\begin{tabular}{ l | l }
