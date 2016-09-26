@@ -2,42 +2,28 @@
 
 \chapter{Discussion} \label{ch:discussion}
 
-The primary goal of this project was to extend ELASPIC and make it possible to predict the effect of mutations on protein stability and protein-protein interaction affinity on a genome-wide scale. This was  p
+The primary objective of this project was to extend ELASPIC and make it possible to predict the effect of mutations on protein stability and protein-protein interaction affinity on a genome-wide scale. We were able to meet this objective with a reasonable amount of success. We implemented ELASPIC as an easy to install and fully automated pipeline, that scales from a single mutation a provided PDB to thousands of mutations affecting many proteins in an entire genome.
+
+ mutating individual PDBs to mutating thousands of proteins in an entire genome. We constructed homology models for a large proportion of proteins in the human SwissProt database (Section \ref{sec:precalculated_data}),
+
+A secondary objective was to explore different approaches for using structural information in order to make more accurate and informative predictions regarding the effect of mutations. The main goal of this work was to improve our ability to predict whether or not a mutations is going to be deleterious and predicting the phenotypic effect of mutations by evaluating the structural impact of mutations instead of looking solely at how conserved the particular is in different organisms and species. Predicting not only whether or not a mutation is going to be deleterious but why it is going to be deleterious. In this case we were much less successful. Do not want to make a thermodynamic model of the cell.
+
+While this was not anticipated at the beginning of this project, we found that mutation deleteriousness is highly
+This objective was met with a reasonable amount of success. We made changes that allow ELASPIC to be run a
 
 To our knowledge, this is the first study comparing the impact of mutations on protein stability and protein-protein interaction affinity with mutation deleteriousness on a genome-wide scale.
 
-Two main factors limit the accuracy and the generalizability of ELASPIC. First, training datasets for both the core and interface predictors are limited in their accuracy and are biased in the types of mutations that they contain. Second, most features that we calculate do not appear to be very informative.
 
-The main goal of this work was to improve our ability to predict whether or not a mutations is going to be deleterious and predicting the phenotypic effect of mutations by evaluating the structural impact of mutations instead of looking solely at how conserved the particular is in different organisms and species.
-
-In the set of features selected through feature elimination, there are both sequence-based features and structure-based features. The most important sequence-based feature is the Provean score.
-
-Results of feature elimination support the view that electrostatics, van der Waals forces and entropy are the main forces determining the effect of mutations, as proposed by Benedix \textit{et al.} in the Concoord/Poisson-Boltzmann surface area model (Equation \ref{eq:benedix_et_al}).
+In the set of features selected through feature elimination, there are both sequence-based features and structure-based features. The most important sequence-based feature is the Provean score. Results of feature elimination support the view that electrostatics, van der Waals forces and entropy are the main forces determining the effect of mutations, as proposed by Benedix \textit{et al.} in the Concoord/Poisson-Boltzmann surface area model (Equation \ref{eq:benedix_et_al}).
 
 \begin{equation} \label{eq:benedix_et_al}
     \Delta G_{CC/PBSA} = \Delta G_{electrostatic} + \Delta G_{van\ der\ Waals} + \Delta G_{entropy}
 \end{equation}
 
-- Use multiple templates when building the homology models.
-- Create multiple models and choose the one with the highest DOPE score.
-- Refine the model using molecular dynamics, although it has been reported that long-term MD is not useful for optimizing structures in most cases \cite{raval_refinement_2012}.
-
-FireProt: Energy- and Evolution-Based Computational Design of Thermostable Multiple-Point Mutants
-
-  - \url{http://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1004556}
-
-  - Predict the structural effect of multiple mutations.
-
-  - ``Stability effects of all possible single-point mutations were estimated using the <BuildModel> module of FoldX''.
-
-  - We demonstrate that thermostability of the model enzymes haloalkane dehalogenase DhaA and γ-hexachlorocyclohexane dehydrochlorinase LinA can be substantially increased.
-
-  - \cite{bednar_fireprot:_2015}
+Two main factors limit the accuracy and the generalizability of ELASPIC. First, training datasets for both the core and interface predictors are limited in their accuracy and are biased in the types of mutations that they contain. Second, most features that we calculate do not appear to be very informative. In Section \ref{sec:more_data}, we describe an approach that we could take to generate more features. In Section \label{sec:better_features} we describe an approach that we could take to learn better features.
 
 
-
-
-\section{Adding support for multiresidue mutations}
+\section{Adding support for multiresidue mutations} \label{sec:more_data}
 
 ELASPIC can easily be extended to calculate the $\Delta \Delta G$ for mutations involving multiple amino acids. The main problem that would have to be solved
 
@@ -62,68 +48,13 @@ It is likely that the performance of the ELASPIC predictor would be lower for mu
 If the ELASPIC predictor can achieve reasonable results for mutations affecting multiple amino acids, it could be used ``in reverse'' to design protein domains with increased stability and protein interfaces with increased affinity.
 
 
-\section{Adding support for more interaction types}
+\section{Multitask learning of mutation deleteriousness and energetic effects} \label{sec:better_features}
 
-HOPE THAT PROVEAN WOULD AT LEAST PARTIALLY MAKE UP FOR THE LIMITING ASSUMPTION THAT THE BACKBONE REMAINS STABLE BETWEEN MUTATIONS.
-
-SCIENTIFICALLY INTERESTING TO SEE WHAT EFFECT MD RELAXATIONS WOULD HAVE ON THE PERFORMANCE OF THE ALGORITHM.
-% \subsection{Protein-protein interactions}
-
-Predict PPIs: PRISM: Protein interaction by structure matching.
-
-% \subsection{Protein-ligand interactions}
-
-- drugging protein-protein interfaces \cite{wells_reaching_2007}
-
-Platinum: Protein-ligand affinity change upon mutation database.
-
-- \url{http://bleoberis.bioc.cam.ac.uk/platinum/}
-
-BioLiP is a semi-manually curated database for high-quality, biologically relevant ligand-protein binding interactions.
-
-- \url{http://zhanglab.ccmb.med.umich.edu/BioLiP/}
-
-- The structure data are collected primarily from the Protein Data Bank, with biological insights mined from literature and other specific databases.
-
-% \subsection{Protein-DNA/RNA interactions}
-
-ProNIT
-
-RBPDB: a database of RNA-binding specificities
-
-\url{http://rbpdb.ccbr.utoronto.ca}
-
-Paper: \url{http://nar.oxfordjournals.org/content/39/suppl_1/D301}
-
-% \subsection{Protein-peptide interactions}
-
-ELM
-
-% \subsection{Phosphorylated residue-mediated interactions}
-
-
-% \section{ELASPIC v2.0}
-% Improve domain definitions and alignments
-
-eSCOP
-
-Gene3D
-
-- Use sequence profiles (e.g. Pfam or Gene3D) to guide the alignment.
-
-``The resulting transformer has then learned a supervised, sparse, high-dimensional categorical embedding of the data.''
-
-% \url{http://scikit-learn.org/stable/auto_examples/ensemble/plot_feature_transformation.html\#example-ensemble-plot-feature-transformation-py}
-
-
-
-\section{Multitask learning of mutation deleteriousness and energetic effects}
-
-In this work, we attempted to improve the generalizability of ELASPIC core and interface predictors by keeping track of their performance on mutation deleteriousness datasets throughout cross-validation and feature elimination (Figures \ref{fig:gridsearch_core}, \ref{fig:gridsearch_interface}, \ref{fig:feature_elimination_core} and \ref{fig:feature_elimination_interface}). While this approach prevents us from selecting predictors that overfit the training set, it does not improve the accuracy of any individual predictor.
+In this work, we attempted to improve the generalizability of ELASPIC core and interface predictors by keeping track of their performance on mutation deleteriousness datasets throughout cross-validation and feature elimination (Figures \ref{fig:gridsearch_core}, \ref{fig:gridsearch_interface}, \ref{fig:feature_elimination_core} and \ref{fig:feature_elimination_interface}). While this approach allows us to discard predictors that overfit the training set, it does not improve the accuracy of any individual predictor.
 
 One way to improve overall accuracy of the predictors would be to leverage information contained in mutation deleteriousness datasets to discover better and more useful features. Mutation deleteriousness datasets are much larger than the $\Delta \Delta G$ datasets, and they may allow sequential and structural features to ``mix'' in a more general environment, and produce combined features that are less noisy and better correlated with the actual effect of mutations.
 
-We could learn those features by first training a boosted decision tree algorithm to predict mutation deleteriousness, and then use the output of those trees as input to a logistic regression model trained to predict mutation $\Delta \Delta G$ (Figure \ref{fig:multitask_learning}). The resulting predictor should not only have better accuracy, but also have a better ability to extrapolate than the currently-used gradient boosted regressor algorithm, which never predicts values that are higher than the highest values observed in the training set.
+We could learn those features by first training a boosted decision tree algorithm to predict mutation deleteriousness, and then use the output of those trees as input to a logistic regression model trained to predict mutation $\Delta \Delta G$ (Figure \ref{fig:multitask_learning}). The resulting predictor should not only have better accuracy, but also have a better ability to extrapolate than the currently-used gradient boosted regressor algorithm, which never predicts values that are higher or lower than the maximum or minimum value observed in the training set.
 
 \begin{figure}[tb]
 	\centering
