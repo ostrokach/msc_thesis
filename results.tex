@@ -4,6 +4,13 @@
 
 After making changes to the ELASPIC pipeline that are described in Section \ref{sec:elaspic}, we retrained ELASPIC core and interface predictors and validated them on new data. This involved curating high-quality training, validation and test datasets (Section \ref{sec:datasets}), selecting the best hyperparameters for the machine learning algorithm using grid-search (Section \ref{sec:gridsearch}), selecting the set of most informative features using feature elimination (Section \ref{sec:feature_elimination}), and testing the final predictors on the test datasets to compare their performance with competing methods (Section \ref{sec:validation}).
 
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=0.8\linewidth]{static/elaspic/core_vs_interface_final.png}
+	\caption[Example of a core and interface mutation.]{Diagram showing an example of a core (A) and an interface (B) mutation. The protein depicted in the diagram is ferricytochrome c from \textit{Rhodospirillum molischianum} (PDB entry \url{2ccy}).}
+	\label{fig:core_vs_interface}
+\end{figure}
+
 
 \section{Datasets} \label{sec:datasets}
 
