@@ -37,6 +37,11 @@ copy_datapkg_figures elaspic_training_set validation \
     validation_performance_core validation_performance_interface \
     test_performance_core test_performance_interface
 
+copy_datapkg_figures elaspic_training_set validation_cancer \
+    roc_curve_full roc_curve_bygene_full \
+    roc_curve_high_confidence roc_curve_bygene_high_confidence \
+    score_distribution_full score_distribution_high_confidence
+
 copy_datapkg_figures elaspic_training_set elaspic_statistics \
     protein_statistics \
     domain_statistics \

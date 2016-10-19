@@ -28,9 +28,11 @@ We started with Pfam domain definitions for all known protein sequences, which w
 The results of this analysis are stored in the \textbf{uniprot\_domain} and the \textbf{uniprot\_domain\_template} tables in the ELASPIC database (Figure \ref{fig:elaspic_database_schema}). The \textbf{uniprot\_domain} table contains all Pfam domains and supradomains that are obtained after removing repeating and overlapping domains, as outlined above. The \textit{pdbfam\_name} column contains the name of the Profs domain. The \textit{alignment\_def} column contains either the original Pfam domain definitions or, in the case of supradomains, the merged domain definitions of multiple Pfam domains. The \textbf{uniprot\_domain\_template} table contains information describing the alignment of the Pfam domain or supradomain with the corresponding Profs structural template, for domains for which a suitable Profs template could be found. The \textit{cath\_id} column identifies the Profs structural template that was selected, and the \textit{domain\_def} column contains the corrected and expanded domain definitions.
 
 
-\subsection{Comparison with Pfam and Gene3D}
+\subsection{Comparison with other methods}
 
-In order to ascertain the validity of Profs domain definitions, we compared Profs, Pfam and Gene3D in terms of sequence coverage (Figure \ref{fig:profs_coverage}) and domain size (Figure \ref{fig:profs_domain_size}).
+The two most prominent methods for detecting structural domains in protein sequences are SUPERFAMILY \cite{wilson_superfamilysophisticated_2009}, which is based on SCOP \cite{hubbard_scop:_1999} domain definitions, and Gene3D \cite{lam_gene3d:_2016}, which is based on CATH \cite{cuff_extending_2011} domain definitions. Both methods use hidden Markov models, trained on curated structural domains in proteins in the PDB, to detect structural domains in all other proteins. Gene3D further employs a set of heuristics to join repeating domains that have a similar sequence.
+
+In order to ascertain the validity of Profs domain definitions, we compared Profs, Pfam and Gene3D in terms of sequence coverage (Figure \ref{fig:profs_coverage}) and domain size (Figure \ref{fig:profs_domain_size}). While we did not include SUPERFAMILY in this comparison, it is unlikely that SUPERFAMILY would show better performance than Profs or Gene3D, as it is based on the SCOP database that has not been updated since 2009.
 
 We downloaded Pfam and Gene3D domain definitions for all human proteins from SIMAP \cite{rattei_simapcomprehensive_2010}, and we calculated Profs domain definitions following the pipeline described above. The analysis was restricted to 18,828 human proteins from UniProt which are annotated with at least one Profs, Pfam or Gene3D domain.
 
@@ -153,7 +155,7 @@ In order to make ELASPIC accessible to a wider scientific audience, Daniel Witvl
 
 One limitation of the webserver was that it spawned ELASPIC jobs on the same virtual machine as the webserver. This meant that only a few mutations could be analyzed at a time, and that the webserver could stall when running mutations in a protein lacking a precalculated Provean supporting set, since constructing a Provean supporting set could require more RAM than the virtual machine had available. In order to make the webserver scale to thousands of mutations, we decided to restructure the job execution backend to run ELASPIC on the local Sun Grid Engine (SGE) cluster. However, this design introduced several challenges.
 
-First, since users can run multiple mutations affecting the same protein, we had to make sure that the Provean supporting sets and homology models are calculated first, before jobs for individual mutations are submitted to the cluster. Otherwise, each mutation would initiate the calculation of a Provean supporting set, which can require more than 5 GB of memory, and a homology model, which can take more than 30 minutes to complete. This would lead to many unnecessary jobs, drastically lowering our throughput, and could lead to inconsistent results, since different jobs can generate different supporting sets and homology models, even for the same protein, due to the inherent randomness of those tasks.
+First, since users can run multiple mutations affecting the same protein, we had to make sure that the Provean supporting sets and homology models are calculated first, before jobs for individual mutations are submitted to the cluster. Otherwise, each mutation would initiate the calculation of a Provean supporting set, which can require more than 5 GB of memory, and a homology model, which can take more than 30 minutes to complete. This would lead to many unnecessary jobs and would drastically lower our throughput.
 
 Second, jobs running on a SGE cluster can die unexpectedly, if, for example, they exceed allocated resources, or if the node on which they are executing experiences a hardware failure. In most cases, jobs do not get an opportunity to send an error message before they are terminated. Therefore, we had to keep track of all running jobs, and resubmit jobs that do not finish successfully.
 
@@ -185,7 +187,7 @@ The information from those queues is then processed by the corresponding corouti
 	\item For each job in the ``email'' queue, a ``Job Complete'' email is sent to the specified email address once all mutations for the associated job have been completed.
 \end{itemize}
 
-The ELASPIC jobsubmitter is highly performant. It is able to handle over 150 requests per second, even with 30,000 mutations already being processed by the web service (Figure \ref{fig:elaspic_jobsubmitter_performance}).
+The ELASPIC jobsubmitter is able to handle over 150 requests per second, even with 30,000 mutations already being processed by the web service (Figure \ref{fig:elaspic_jobsubmitter_performance}). Therefore, it should not increase significantly the response time of the ELASPIC webserver and should not be the limiting factor in the number of jobs that can be submitted at the same time.
 
 \begin{figure}[!htb]
 	\centering
