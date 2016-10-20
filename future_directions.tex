@@ -3,19 +3,15 @@
 \chapter{Future directions} \label{ch:future_directions}
 
 
-\section{Predicting phenotypes}
-
-Train on ligand-directed signalling to try to predict the effect of drugs on receptors \cite{nwachukwu_predictive_2016}.
-``Our long‐term goal is to be able to predict proliferative or anti‐proliferative activity of a ligand in different tissues from its crystal structure by identifying different structural perturbations that lead to specific signaling outcomes.''
-
-
 \section{Multitask learning of mutation deleteriousness and energetic effects} \label{sec:multitask_learning}
+
+%  For example,  and are much more diverse, they could contribute much information to the ELASPIC predictors. Some possible ways in which this could expand and incorporate more information into the ELASPIC training set are discussed in
 
 In this work, we attempted to improve the generalizability of ELASPIC core and interface predictors by keeping track of their performance on mutation deleteriousness datasets throughout cross-validation and feature elimination (Figures \ref{fig:gridsearch_core}, \ref{fig:gridsearch_interface}, \ref{fig:feature_elimination_core} and \ref{fig:feature_elimination_interface}). While this approach allows us to discard predictors that overfit the training set, it does not improve the accuracy of any individual predictor.
 
-We could improve the overall accuracy of the predictors by leveraging the information contained in mutation deleteriousness datasets to discover better and more useful features. Mutation deleteriousness datasets are much larger than the $\Delta \Delta G$ datasets, and they may allow sequential and structural features to ``mix'' in a more general environment, and produce combined features that are less noisy and better correlated with the actual effect of mutations.
+The performance of core and interface predictors on the training sets is highly correlated with their performance on the deleteriousness datasets. We could improve the overall accuracy of the predictors by leveraging the information contained in mutation deleteriousness datasets to discover better and more informative features. Since the mutation deleteriousness datasets contain 10 to 100 times more mutations than the training sets, they may allow sequential and structural features to ``mix'' in a more general environment, and produce combined features that are less noisy and better correlated with the actual effect of mutations.
 
-We could learn those features by first training a boosted decision tree algorithm to predict mutation deleteriousness, and then use the output of those trees as input to a logistic regression model trained to predict mutation $\Delta \Delta G$ (Figure \ref{fig:multitask_learning}). The resulting predictor should not only have better accuracy, but should also have a better ability to extrapolate than the currently-used gradient boosted regressor algorithm, which never predicts values that are higher or lower than the maximum or minimum value observed in the training set.
+We could learn those features by first training a boosted decision tree algorithm to predict mutation deleteriousness, and then using the output of those trees as input to a logistic regression model trained to predict mutation $\Delta \Delta G$ (Figure \ref{fig:multitask_learning}). The resulting predictor should not only have better accuracy, but should also have a better ability to extrapolate than the current gradient boosted regressor algorithm, which never predicts values that are higher or lower than the maximum or minimum value observed in the training set.
 
 \begin{figure}[!htb]
 	\centering
