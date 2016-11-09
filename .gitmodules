@@ -1,0 +1,9 @@
+[submodule "submodules/elaspic_training_set"]
+	path = submodules/elaspic_training_set
+	url = https://kimweb1.ccbr.utoronto.ca/git/datapkg/elaspic_training_set.git
+[submodule "submodules/protein_folding_energy"]
+	path = submodules/protein_folding_energy
+	url = https://kimweb1.ccbr.utoronto.ca/git/datapkg/protein_folding_energy.git
+[submodule "submodules/protein_interaction_energy"]
+	path = submodules/protein_interaction_energy
+	url = https://kimweb1.ccbr.utoronto.ca/git/datapkg/protein_interaction_energy.git
