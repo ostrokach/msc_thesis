@@ -1,3 +1,0 @@
-Number of unique peptides: 283
-Number of unique interfaces: 2508
-Number of unique peptide - interface combinations: 2674
